@@ -1,0 +1,191 @@
+format_version: '2'
+name: serial
+board:
+  identifier: CustomBoard
+  device: ATmega88-20PU
+details: null
+application: null
+middlewares: {}
+drivers:
+  CPU:
+    user_label: CPU
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::CPU::driver_config_definition::SYSCTRL::Drivers:SYSCTRL:'
+    functionality: System
+    api: 'Drivers:SYSCTRL:'
+    configuration:
+      async_input_speed: 32768
+      clkadc_oscillator: Input clock
+      clkasy_oscillator: Async input clock
+      clkcpu_oscillator: Input clock
+      clkio_oscillator: Input clock
+      clkptc_oscillator: Input clock
+      cpu_clock_source: CLKcpu
+      enable_async_input: true
+      enable_clkadc: false
+      enable_clkadc_enable: false
+      enable_clkasy: false
+      enable_clkasy_enable: false
+      enable_clkcpu: true
+      enable_clkio: true
+      enable_clkio_enable: true
+      enable_clkptc: false
+      enable_clkptc_enable: false
+      enable_core_clock: true
+      enable_input: true
+      input_speed: 8000000
+      pm_ivsel: Interrupt vector placed at the beginning of boot loader section
+      pm_pud: false
+      pm_se: false
+      pm_sm: Idle
+      prescaler_divider: '8'
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group: null
+  WDT_0:
+    user_label: WDT_0
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::WDT::driver_config_definition::WDT::Drivers:WDT.Init:'
+    functionality: WDT
+    api: 'Drivers:WDT_Init:'
+    configuration:
+      wdtcsr_wde: true
+      wdtcsr_wdie: false
+      wdtcsr_wdp: Oscillator Cycles 16K
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group: null
+  EXTERNAL_IRQ_0:
+    user_label: EXTERNAL_IRQ_0
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::EXINT::driver_config_definition::EXINT::Drivers:EXINT.Init:'
+    functionality: External_IRQ
+    api: 'Drivers:EXINT_Init:'
+    configuration:
+      exint_isc0: The low level of ISC0 generates an interrupt request
+      exint_isc1: The low level of ISC1 generates an interrupt request
+    optional_signals:
+    - identifier: EXTERNAL_IRQ_0:PCINT/13
+      pad: PC5
+      mode: Enabled
+      configuration: null
+      definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::optional_signal_definition::EXINT.PCINT.13
+      name: EXINT/PCINT/13
+      label: PCINT/13
+    variant: null
+    clocks:
+      domain_group: null
+  TIMER_0:
+    user_label: TIMER_0
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::TC0::driver_config_definition::Mode.0.Normal::Drivers:TC8.Init:'
+    functionality: Timer
+    api: 'Drivers:TC8_Init:'
+    configuration:
+      tc8_coma: Normal port operation, OCA disconnected
+      tc8_comb: Normal port operation, OCB disconnected
+      tc8_cs: IO clock divided by 8
+      tc8_ociea: false
+      tc8_ocieb: false
+      tc8_toie: true
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: TC8
+          input: CLKio
+        configuration:
+          tc8_clock_source: CLKio
+  TIMER_2:
+    user_label: TIMER_2
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::TC2::driver_config_definition::Mode.1.Phase.Correct::Drivers:TC8.Init:'
+    functionality: Timer
+    api: 'Drivers:TC8_Init:'
+    configuration:
+      tc8_async_exclk: false
+      tc8_coma: Normal port operation, OCA disconnected
+      tc8_comb: Clear OCB on up-counting, set OCB on down-counting
+      tc8_cs: No prescaling
+      tc8_ociea: false
+      tc8_ocieb: false
+      tc8_toie: false
+    optional_signals:
+    - identifier: TIMER_2:OCB
+      pad: PD3
+      mode: Enabled
+      configuration: null
+      definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::optional_signal_definition::TC2.OCB
+      name: TC2/OCB
+      label: OCB
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: TC2
+          input: CLKio
+        configuration:
+          tc2_clock_source: CLKio
+  USART_0:
+    user_label: USART_0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::USART0::driver_config_definition::UART::Drivers:USART:USART.Init
+    functionality: USART
+    api: Drivers:USART:USART_Init
+    configuration:
+      usart_baud_rate: 9600
+      usart_mpcm: false
+      usart_rxcie: true
+      usart_rxen: true
+      usart_txcie: false
+      usart_txen: true
+      usart_ucsz: 7-bit
+      usart_udrie: true
+      usart_upm: Disabled
+      usart_usbs: 1-bit
+    optional_signals: []
+    variant:
+      specification: UMSEL=0
+      required_signals:
+      - name: USART0/RXD
+        pad: PD0
+        label: RXD
+      - name: USART0/TXD
+        pad: PD1
+        label: TXD
+    clocks:
+      domain_group:
+        nodes:
+        - name: USART
+          input: CLKio
+        configuration:
+          usart_clock_source: CLKio
+pads:
+  PD0:
+    name: PD0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PD0
+    mode: Digital input
+    user_label: PD0
+    configuration: null
+  PD1:
+    name: PD1
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PD1
+    mode: Digital output
+    user_label: PD1
+    configuration: null
+  GLOW:
+    name: PD3
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PD3
+    mode: Digital output
+    user_label: GLOW
+    configuration: null
+  HEART:
+    name: PB0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB0
+    mode: Digital output
+    user_label: HEART
+    configuration: null
+  BUTTON:
+    name: PC5
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PC5
+    mode: Digital input
+    user_label: BUTTON
+    configuration: null
+toolchain_options: []
