@@ -1,0 +1,1 @@
+PATH=$PATH:../../../avr8-gnu-toolchain-linux_x86_64/bin avr-objdump -d AtmelStart.elf

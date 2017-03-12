@@ -24,7 +24,7 @@ int main(void)
 	cpu_irq_enable();
 
 	/* Replace with your application code */
-	while (1) {
+	for(;;) {
 
 		ATOMIC_BLOCK(ATOMIC_FORCEON) {
 			if (is_button_change()) {
