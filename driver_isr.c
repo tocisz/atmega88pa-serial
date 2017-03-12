@@ -10,6 +10,7 @@
 #include <compiler.h>
 
 #include "events.h"
+#include "usart_util.h"
 
 // contdown to limit button instability
 uint8_t button_block = 0;
@@ -25,20 +26,19 @@ static inline void handle_button_state_change(void) {
 ISR(USART_RX_vect)
 {
 	char c = USART_getc();
-	if (c == '1') {
-		HEART_set_level(true);
-	} else if (c == '0') {
-		HEART_set_level(false);
-	}
 	USART_putc(c);
-	// HEART_flip_level();
-	/* Insert your USART reception complete interrupt handling code here */
+	HEART_toggle_level();
 }
 
 ISR(USART_UDRE_vect)
 {
-
-	/* Insert your USART data register empty interrupt handling code here */
+	char c = *(USART_buffer++);
+	if (c != 0) {
+		USART_putc(c);
+	} else {
+		USART_disable_udre();
+		USART_buffer = NULL;
+	}
 }
 
 ISR(TIMER0_OVF_vect)

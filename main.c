@@ -31,6 +31,7 @@ int main(void)
 				clear_button_change();
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					HEART_set_level(button_state_on);
+					USART_puts(button_state_on ? "ON\r\n" : "OFF\r\n");
 				}
 			}
 
