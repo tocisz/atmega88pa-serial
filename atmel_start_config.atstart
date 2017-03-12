@@ -20,7 +20,7 @@ drivers:
       clkio_oscillator: Input clock
       clkptc_oscillator: Input clock
       cpu_clock_source: CLKcpu
-      enable_async_input: true
+      enable_async_input: false
       enable_clkadc: false
       enable_clkadc_enable: false
       enable_clkasy: false
@@ -50,7 +50,7 @@ drivers:
     configuration:
       wdtcsr_wde: true
       wdtcsr_wdie: false
-      wdtcsr_wdp: Oscillator Cycles 16K
+      wdtcsr_wdp: Oscillator Cycles 512K
     optional_signals: []
     variant: null
     clocks:
@@ -124,8 +124,8 @@ drivers:
           input: CLKio
         configuration:
           tc2_clock_source: CLKio
-  USART_0:
-    user_label: USART_0
+  USART:
+    user_label: USART
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::USART0::driver_config_definition::UART::Drivers:USART:USART.Init
     functionality: USART
     api: Drivers:USART:USART_Init
@@ -137,7 +137,7 @@ drivers:
       usart_txcie: false
       usart_txen: true
       usart_ucsz: 7-bit
-      usart_udrie: true
+      usart_udrie: false
       usart_upm: Disabled
       usart_usbs: 1-bit
     optional_signals: []

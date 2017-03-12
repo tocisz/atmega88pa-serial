@@ -73,5 +73,5 @@ void system_init()
 
 	tc8_2_init();
 
-	USART_0_init();
+	USART_init();
 }

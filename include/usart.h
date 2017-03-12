@@ -65,54 +65,46 @@ extern "C" {
 #endif
 
 /**
- * \brief Initialize USART_0 interface
- *
- * \return Initialization status.
+ * \brief Check if USART transmitt buffer is empty
  */
-int8_t USART_0_init();
+static inline int8_t USART_tx_empty()
+{
+	return UCSR0A & (1 << UDRE0);
+}
 
 /**
- * \brief Check if the USART_0 transmitt buffer is empty
- *
- * \return Transmitter ready statua
- * \retval false Transmitt buffer is full, no new data can be written
- * \retval true  Transmitt buffer is empty, new data can be written
+ * \brief Check if USART receive buffer is full
  */
-int8_t USART_0_tx_empty();
+static inline int8_t USART_rx_full()
+{
+	return UCSR0A & (1 << RXC0);
+}
 
 /**
- * \brief Check if the USART_0 receive buffer is full
- *
- * \return Receiver ready status
- * \retval false  No new data in receive buffer
- * \retval true   Receive buffer has new data
+ * \brief Check if USART data is transmitted
  */
-int8_t USART_0_rx_full();
+static inline int8_t USART_data_transmitted()
+{
+	return UCSR0A & (1 << TXC0);
+}
 
 /**
- * \brief Check if USART_0 data is transmitted
- *
- * \return Receiver ready status
- * \retval false  Data is not completely shifted out of the shift register
- * \retval true   Data completely shifted out if the USART shift register
+ * \brief Read one character from USART
  */
-int8_t USART_0_data_transmitted();
+static inline uint8_t USART_getc()
+{
+	return UDR0;
+}
 
 /**
- * \brief Read one character from USART_0
- *
- * \return Data read from the USART_0 module
+ * \brief Write one character on USART
  */
-uint8_t USART_0_getc();
+static inline int8_t USART_putc(const uint8_t data)
+{
+	UDR0 = data;
 
-/**
- * \brief Write one character on USART_0
- *
- * \param[in] data The character to write to the USART bus
- *
- * \return Character write status
- */
-int8_t USART_0_putc(const uint8_t data);
+	return 0;
+}
 
 #ifdef __cplusplus
 }

@@ -46,9 +46,9 @@
 #include <atmel_start_pins.h>
 
 /**
- * \brief Initialize USART_0 interface
+ * \brief Initialize USART interface
  */
-int8_t USART_0_init()
+int8_t USART_init()
 {
 
 	/* Enable USART0 */
@@ -74,48 +74,6 @@ int8_t USART_0_init()
 	         (0 << UPM01) | (0 << UPM00) |     // Parity mode: Disabled
 	         (0 << USBS0) |                    // 1-bit stop bit
 	         (1 << UCSZ01) | (0 << UCSZ00);    // Character size is 7-bit
-
-	return 0;
-}
-
-/**
- * \brief Check if USART_0 transmitt buffer is empty
- */
-int8_t USART_0_tx_empty()
-{
-	return UCSR0A & (1 << UDRE0);
-}
-
-/**
- * \brief Check if USART_0 receive buffer is full
- */
-int8_t USART_0_rx_full()
-{
-	return UCSR0A & (1 << RXC0);
-}
-
-/**
- * \brief Check if USART_0 data is transmitted
- */
-int8_t USART_0_data_transmitted()
-{
-	return UCSR0A & (1 << TXC0);
-}
-
-/**
- * \brief Read one character from USART_0
- */
-uint8_t USART_0_getc()
-{
-	return UDR0;
-}
-
-/**
- * \brief Write one character on USART_0
- */
-int8_t USART_0_putc(const uint8_t data)
-{
-	UDR0 = data;
 
 	return 0;
 }

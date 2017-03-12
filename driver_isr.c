@@ -22,16 +22,23 @@ static inline void handle_button_state_change(void) {
 	}
 }
 
-ISR(USART0_RX_vect)
+ISR(USART_RX_vect)
 {
-
-	/* Insert your USART_0 reception complete interrupt handling code here */
+	char c = USART_getc();
+	if (c == '1') {
+		HEART_set_level(true);
+	} else if (c == '0') {
+		HEART_set_level(false);
+	}
+	USART_putc(c);
+	// HEART_flip_level();
+	/* Insert your USART reception complete interrupt handling code here */
 }
 
-ISR(USART0_UDRE_vect)
+ISR(USART_UDRE_vect)
 {
 
-	/* Insert your USART_0 data register empty interrupt handling code here */
+	/* Insert your USART data register empty interrupt handling code here */
 }
 
 ISR(TIMER0_OVF_vect)
