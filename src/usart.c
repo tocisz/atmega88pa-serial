@@ -65,7 +65,7 @@ int8_t USART_0_init()
 
 	UCSR0B = (1 << RXCIE0) | // Enable RX complete interrupt
 	         (0 << TXCIE0) | // Disable TX complete interrupt
-	         (1 << UDRIE0) | // Enable data register empty interrupt
+	         (0 << UDRIE0) | // Disable data register empty interrupt
 	         (1 << RXEN0) |  // Enable receiver
 	         (1 << TXEN0) |  // Enable transmitter
 	         (0 << UCSZ02);  // Character size is 7-bit

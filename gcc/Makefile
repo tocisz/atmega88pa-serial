@@ -40,6 +40,7 @@ src/wdt.o \
 atmel_start.o \
 src/ccp.o \
 src/protected_io.o \
+events.o \
 main.o
 
 OBJS_AS_ARGS +=  \
@@ -52,6 +53,7 @@ OBJS_AS_ARGS +=  \
 "atmel_start.o" \
 "src/ccp.o" \
 "src/protected_io.o" \
+"events.o" \
 "main.o"
 
 # List the dependency files

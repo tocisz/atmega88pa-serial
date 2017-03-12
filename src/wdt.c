@@ -53,7 +53,7 @@ int8_t WDT_0_init()
 	MCUSR &= ~MCU_RESET_CAUSE_WDT;
 	protected_write_io((void *)&WDTCSR,
 	                   (1 << WDCE) | (1 << WDE),
-	                   (0x03 /* Oscillator Cycles 16K */) | (1 << WDE /* Watch Dog Enable: enabled */)
+	                   (0x20 /* Oscillator Cycles 512K */) | (1 << WDE /* Watch Dog Enable: enabled */)
 	                       | (0 << WDIE /* Watchdog Timeout Interrupt Enable: disabled */));
 
 	return 0;
