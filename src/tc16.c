@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART related functionality declaration.
+ * \brief TC16 related functionality implementation.
 *
  * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
@@ -41,75 +41,30 @@
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifndef _USART_H_INCLUDED
-#define _USART_H_INCLUDED
-
-#include <compiler.h>
-#include <driver_init.h>
+#include <tc16.h>
+#include <utils.h>
 
 /**
- * \addtogroup usart USART driver
- *
- * \section usart_rev Revision History
- * - v0.0.0.1 Initial Commit
- *
- *@{
+ * \brief Initialize TIMER_1 interface
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \brief Check if USART transmitt buffer is empty
- */
-static inline int8_t USART_tx_empty()
+int8_t TIMER_1_init()
 {
-	return UCSR0A & (1 << UDRE0);
-}
+	/* Enable TC1 */
+	PRR &= ~(1 << PRTIM1);
 
-/**
- * \brief Check if USART receive buffer is full
- */
-static inline int8_t USART_rx_full()
-{
-	return UCSR0A & (1 << RXC0);
-}
+	TCCR1A = (0 << COM1A1) | (0 << COM1A0) | // Normal port operation, OCA disconnected
+	         (0 << COM1B1) | (0 << COM1B0) | // Normal port operation, OCB disconnected
+	         (0 << WGM11) | (0 << WGM10);    // Mode 4 CTC
 
-/**
- * \brief Check if USART data is transmitted
- */
-static inline int8_t USART_data_transmitted()
-{
-	return UCSR0A & (1 << TXC0);
-}
+	TCCR1B = (0 << WGM13) | (1 << WGM12) |            // Mode 4 CTC
+	         (0 << ICNC1) |                           // Disable input capture noise canceler
+	         (0 << ICES1) |                           // Falling edge will trigger input capture
+	         (0 << CS12) | (0 << CS11) | (1 << CS10); // No prescaling
 
-/**
- * \brief Read one character from USART
- */
-static inline uint8_t USART_getc()
-{
-	return UDR0;
-}
-
-/**
- * \brief Write one character on USART
- */
-static inline int8_t USART_putc(const uint8_t data)
-{
-	UDR0 = data;
+	TIMSK1 = (0 << ICIE1) |  // Disable input capture interrupt
+	         (0 << OCIE1B) | // Disable output compare match B interrupt
+	         (0 << OCIE1A) | // Disable output compare match A interrupt
+	         (0 << TOIE1);   // Disable overflow interrupt
 
 	return 0;
 }
-
-int8_t USART_init();
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* _USART_H_INCLUDED */

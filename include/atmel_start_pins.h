@@ -73,6 +73,68 @@ static inline bool HEART_get_level()
 }
 
 /**
+ * \brief Set SPEAKER pull mode
+ *
+ * Configure pin to pull up, down or disable pull mode, supported pull
+ * modes are defined by device used
+ *
+ * \param[in] pull_mode Pin pull mode
+ */
+static inline void SPEAKER_set_pull_mode(const enum port_pull_mode pull_mode)
+{
+	PORTB_set_pin_pull_mode(PORTB1, pull_mode);
+}
+
+/**
+ * \brief Set SPEAKER data direction
+ *
+ * Select if the pin data direction is input, output or disabled.
+ * If disabled state is not possible, this function throws an assert.
+ *
+ * \param[in] direction PORT_DIR_IN  = Data direction in
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void SPEAKER_set_dir(const enum port_dir dir)
+{
+	PORTB_set_pin_dir(PORTB1, dir);
+}
+
+/**
+ * \brief Set SPEAKER level
+ *
+ * Sets output level on a pin
+ *
+ * \param[in] level true  = Pin level set to "high" state
+ *                  false = Pin level set to "low" state
+ */
+static inline void SPEAKER_set_level(const bool level)
+{
+	PORTB_set_pin_level(PORTB1, level);
+}
+
+/**
+ * \brief Toggle output level on SPEAKER
+ *
+ * Toggle the pin level
+ */
+static inline void SPEAKER_toggle_level()
+{
+	PORTB_toggle_pin_level(PORTB1);
+}
+
+/**
+ * \brief Get level on SPEAKER
+ *
+ * Reads the level on a pin
+ */
+static inline bool SPEAKER_get_level()
+{
+	return PORTB_get_pin_level(PORTB1);
+}
+
+/**
  * \brief Set BUTTON pull mode
  *
  * Configure pin to pull up, down or disable pull mode, supported pull

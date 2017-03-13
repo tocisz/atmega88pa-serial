@@ -34,6 +34,7 @@ OBJS +=  \
 src/driver_init.o \
 driver_isr.o \
 src/exint.o \
+src/tc16.o \
 src/tc8.o \
 src/usart.o \
 src/wdt.o \
@@ -42,12 +43,15 @@ src/ccp.o \
 src/protected_io.o \
 events.o \
 usart_util.o \
+eeprom.o \
+sound.o \
 main.o
 
 OBJS_AS_ARGS +=  \
 "src/driver_init.o" \
 "driver_isr.o" \
 "src/exint.o" \
+"src/tc16.o" \
 "src/tc8.o" \
 "src/usart.o" \
 "src/wdt.o" \
@@ -56,6 +60,8 @@ OBJS_AS_ARGS +=  \
 "src/protected_io.o" \
 "events.o" \
 "usart_util.o" \
+"eeprom.o" \
+"sound.o" \
 "main.o"
 
 # List the dependency files
