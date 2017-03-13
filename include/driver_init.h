@@ -20,7 +20,7 @@
 #include <wdt.h>
 #include <exint.h>
 #include <tc8.h>
-#include <tc8.h>
+#include <tc16.h>
 #include <usart.h>
 
 #ifdef __cplusplus

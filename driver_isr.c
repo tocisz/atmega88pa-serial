@@ -54,6 +54,11 @@ ISR(TIMER0_OVF_vect)
 	}
 }
 
+ISR(TIMER1_COMPA_vect)
+{
+        set_new_sound_cycle();
+}
+
 ISR(PCINT1_vect)
 {
 	if (button_block)

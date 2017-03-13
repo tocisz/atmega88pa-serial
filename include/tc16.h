@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART related functionality declaration.
+ * \brief TC16 related functionality declaration.
 *
  * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
@@ -41,16 +41,19 @@
  *
  */
 
-#ifndef _USART_H_INCLUDED
-#define _USART_H_INCLUDED
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef _TC16_H_INCLUDED
+#define _TC16_H_INCLUDED
 
 #include <compiler.h>
-#include <driver_init.h>
 
 /**
- * \addtogroup usart USART driver
+ * \addtogroup tc16 driver
  *
- * \section usart_rev Revision History
+ * \section tc16_rev Revision History
  * - v0.0.0.1 Initial Commit
  *
  *@{
@@ -60,54 +63,35 @@
 extern "C" {
 #endif
 
-int8_t USART_init();
+/**
+ * \brief Initialize TIMER_1 interface
+ *
+ * \return Initialization status.
+ */
+int8_t TIMER_1_init();
 
 /**
- * \brief Check if USART transmitt buffer is empty
+ * \brief Set compare channel A value
+ *
+ * \param[in] value The new compare value to set
  */
-static inline int8_t USART_tx_empty()
+static inline void TIMER_1_set_comp_a(uint16_t value)
 {
-	return UCSR0A & (1 << UDRE0);
+	OCR1A = value;
 }
 
 /**
- * \brief Check if USART receive buffer is full
+ * \brief Set compare channel B value
+ *
+ * \param[in] value The new compare value to set
  */
-static inline int8_t USART_rx_full()
+static inline void TIMER_1_set_comp_b(uint16_t value)
 {
-	return UCSR0A & (1 << RXC0);
+	OCR1B = value;
 }
-
-/**
- * \brief Check if USART data is transmitted
- */
-static inline int8_t USART_data_transmitted()
-{
-	return UCSR0A & (1 << TXC0);
-}
-
-/**
- * \brief Read one character from USART
- */
-static inline uint8_t USART_getc()
-{
-	return UDR0;
-}
-
-/**
- * \brief Write one character on USART
- */
-static inline int8_t USART_putc(const uint8_t data)
-{
-	UDR0 = data;
-
-	return 0;
-}
-
-int8_t USART_init();
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _USART_H_INCLUDED */
+#endif /* _TC16_H_INCLUDED */
