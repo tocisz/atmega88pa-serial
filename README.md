@@ -7,8 +7,7 @@ This project demonstrates:
  - using input interrupt to handle button press
   * how to prevent button instability by ignoring button state changes for short time after a change
  - using USART interrupt to read and send data
-  * only echo back action on RX (+ switch LED state)
-  * very simple `puts(char *)` implementation to send button press status
+  * integrate with libc `stdio.h`
  - using software events to minimize ISR code
   * interrupt sets flag
   * main loop checks it, clears and performs action
