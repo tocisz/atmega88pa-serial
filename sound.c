@@ -125,17 +125,6 @@ const uint8_t note_gap_time = 10;
 uint16_t next_note_time = 0;
 
 void start_generator(void) {
-	/* Enable TC1 */
-	//PRR &= ~(1 << PRTIM1);
-  // TODO czy wyłączanie generatora powoduje zwiechy?
-  // czy może to przerwanie (OCA match)
-  // UWAGA:
-  // 1. Zwiecha powoduje, że dioda Glow świeciła na tym samym poziomie
-  // 2. Podczas zwiechy program przechodzi cały czas przez główną pętlę
-  //   (danie tam resetu watchdoga sprawia, że reset nie następuje)
-  // 3. Mimo zwiechy naciśnięcie przycisku powoduje zgaszenie
-  //    LEDa stanu odtwarzania.
-
 	switch (mode) {
 		case MODE_SIMPLE:
 			TIMER_1_set_comp_a(mode_simple_freq);
@@ -145,21 +134,21 @@ void start_generator(void) {
 		// 	break;
 	}
 
-  // Toggle OCA on Compare Match
-  TCCR1A |= (0 << COM1A1) | (1 << COM1A0);
+  TCCR1A |= (0 << COM1A1) | (1 << COM1A0); // Toggle OCA on Compare Match
+  TCNT1 = mode_simple_freq-1;
+  TCCR1B |= (1 << CS10); // Start timer
 }
 
 void stop_generator(void) {
-  // cli();
-  // Disconnect OCA
-  TCCR1A &= ~((1 << COM1A1) | (1 << COM1A0));
-	/* Disable TC1 */
-	//PRR |= 1 << PRTIM1;
-  SPEAKER_set_level(false);
-  // sei();
+  TCCR1B &= ~(1 << CS10); // Stop timer
+  TCCR1A &= ~((1 << COM1A1) | (1 << COM1A0)); // Disconnect OCA
+  SPEAKER_set_level(false); // Set level to LOW
 }
 
 void sound_on(void) {
+  /* Enable TC1 */
+	PRR &= ~(1 << PRTIM1);
+
 	mode = MODE_SIMPLE;
 	start_generator();
 }
@@ -167,6 +156,9 @@ void sound_on(void) {
 void sound_off(void) {
 	mode = MODE_OFF;
   stop_generator();
+
+  /* Disable TC1 */
+	PRR |= (1 << PRTIM1);
 }
 
 inline void schedule_gap(uint16_t scheduler_time) {
