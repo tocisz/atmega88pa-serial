@@ -48,6 +48,7 @@ ISR(TIMER0_OVF_vect)
 	++time;
 
 	if (button_block == 1) { // check state at the end of blocked period
+		PCMSK1 |= (1 << PCINT13); // Pin change enable mask 13
 		handle_button_state_change();
 	}
 	if (button_block > 0) {
@@ -57,11 +58,8 @@ ISR(TIMER0_OVF_vect)
 
 ISR(PCINT1_vect)
 {
-	if (button_block)
-		return;
-
 	handle_button_state_change();
-
-	// 1 can give arbitrary small delay (we don't reset timer)
+	PCMSK1 &= ~(1 << PCINT13); // Pin change enable mask 13
+	// disable button interrupt and schedule it to be enabled after 2-4ms
 	button_block = 2;
 }
