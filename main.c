@@ -2,6 +2,7 @@
 #include <avr/wdt.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /////////////////// GOLW //////////////////
 uint8_t power = 0;
@@ -21,24 +22,17 @@ static inline void animate_glow(void) {
 
 uint16_t start_time, end_time;
 
-const char NL[] = "\r\n";
-inline void append_nl(char *s, uint8_t slen) {
-	uint8_t len = strlen(s);
-	strlcpy(s+len, NL, slen-len);
-}
-
-#define BUFLEN 8
-char print_buffer[BUFLEN];
+char print_buffer[6];
 void print_time(uint16_t val) {
 	itoa(val, print_buffer, 10);
-	append_nl(print_buffer, BUFLEN);
-	USART_puts(print_buffer);
+	puts(print_buffer);
 }
 
 int main(void)
 {
 	/* Initializes MCU, drivers and middleware */
 	atmel_start_init();
+	USART_util_init();
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cpu_irq_enable();
 
@@ -67,6 +61,10 @@ int main(void)
 					wdt_reset();
 					animate_glow();
 				}
+			}
+
+			while (in_buf_length() > 0) {
+				putchar(getchar());
 			}
 		}
 
