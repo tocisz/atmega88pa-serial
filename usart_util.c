@@ -33,14 +33,3 @@ void USART_util_init(void) {
   stdin = &stdinout;
   stdout = &stdinout;
 }
-
-// uint8_t USART_puts(char *s) {
-//   uint8_t cnt = 0;
-//   while (s != )
-//   // wait for previous puts to finish
-//   while (USART_buffer != NULL) {
-//     sleep_mode();
-//   }
-// 	USART_buffer = s;
-// 	USART_enable_udre();
-// }
