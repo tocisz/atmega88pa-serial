@@ -2,6 +2,7 @@
 #include <avr/wdt.h>
 #include <stdlib.h>
 #include <string.h>
+#include <avr/pgmspace.h>
 
 /////////////////// GOLW //////////////////
 uint8_t power = 0;
@@ -21,10 +22,10 @@ static inline void animate_glow(void) {
 
 uint16_t start_time, end_time;
 
-const char NL[] = "\r\n";
+const PROGMEM char NL[] = "\r\n";
 inline void append_nl(char *s, uint8_t slen) {
 	uint8_t len = strlen(s);
-	strlcpy(s+len, NL, slen-len);
+	strlcpy_P(s+len, NL, slen-len);
 }
 
 #define BUFLEN 8
