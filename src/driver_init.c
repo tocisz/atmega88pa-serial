@@ -6,7 +6,7 @@
  * to avoid losing it when reconfiguring.
  */
 
-#include "driver_init.h"
+#include <driver_init.h>
 #include <system.h>
 
 void exint_0_init(void)
@@ -47,6 +47,22 @@ void tc8_2_init(void)
 	TIMER_2_init();
 }
 
+void tc16_1_init(void)
+{
+
+	// Set pin direction to output
+	SPEAKER_set_dir(PORT_DIR_OUT);
+
+	SPEAKER_set_level(
+	    // <y> Initial level
+	    // <id> pad_initial_level
+	    // <false"> Low
+	    // <true"> High
+	    false);
+
+	TIMER_1_init();
+}
+
 void system_init()
 {
 	mcu_init();
@@ -72,6 +88,8 @@ void system_init()
 	tc8_0_init();
 
 	tc8_2_init();
+
+	tc16_1_init();
 
 	USART_init();
 }

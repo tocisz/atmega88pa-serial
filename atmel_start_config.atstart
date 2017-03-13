@@ -124,6 +124,37 @@ drivers:
           input: CLKio
         configuration:
           tc2_clock_source: CLKio
+  TIMER_1:
+    user_label: TIMER_1
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::TC1::driver_config_definition::Mode.4.CTC::Drivers:TC16.Init:'
+    functionality: Timer
+    api: 'Drivers:TC16_Init:'
+    configuration:
+      tc16_coma: Normal port operation, OCA disconnected
+      tc16_comb: Normal port operation, OCB disconnected
+      tc16_cs: No prescaling
+      tc16_ices: Falling edge will trigger input capture
+      tc16_icie: false
+      tc16_icnc: false
+      tc16_ociea: false
+      tc16_ocieb: false
+      tc16_toie: false
+    optional_signals:
+    - identifier: TIMER_1:OCA
+      pad: PB1
+      mode: Enabled
+      configuration: null
+      definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::optional_signal_definition::TC1.OCA
+      name: TC1/OCA
+      label: OCA
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: TC16
+          input: CLKio
+        configuration:
+          tc16_clock_source: CLKio
   USART:
     user_label: USART
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::USART0::driver_config_definition::UART::Drivers:USART:USART.Init
@@ -181,6 +212,12 @@ pads:
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB0
     mode: Digital output
     user_label: HEART
+    configuration: null
+  SPEAKER:
+    name: PB1
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB1
+    mode: Digital output
+    user_label: SPEAKER
     configuration: null
   BUTTON:
     name: PC5
