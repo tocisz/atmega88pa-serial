@@ -36,11 +36,3 @@ static inline void set_new_512hz_cycle(void) {
 static inline void clear_new_512hz_cycle(void) {
     EVENT0 &= ~(1 << NEW_512HZ_CYCLE);
 }
-
-static inline uint16_t read_time(void) {
-  uint16_t ret;
-  ATOMIC_BLOCK(ATOMIC_FORCEON) {
-    ret = time;
-  }
-  return ret;
-}
