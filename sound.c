@@ -135,7 +135,7 @@ void start_generator(void) {
 	}
 
   TCCR1A |= (0 << COM1A1) | (1 << COM1A0); // Toggle OCA on Compare Match
-  TCNT1 = mode_simple_freq-1;
+  TCNT1 = 0;
   TCCR1B |= (1 << CS10); // Start timer
 }
 
