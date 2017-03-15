@@ -1,5 +1,8 @@
 #include <atmel_start.h>
 #include <avr/wdt.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 /////////////////// GOLW //////////////////
 uint8_t power = 0;
@@ -15,11 +18,21 @@ static inline void animate_glow(void) {
 ///////////////////////////////////////////
 
 #include "events.h"
+#include "usart_util.h"
+
+uint16_t start_time, end_time;
+
+char print_buffer[6];
+void print_time(uint16_t val) {
+	itoa(val, print_buffer, 10);
+	puts(print_buffer);
+}
 
 int main(void)
 {
 	/* Initializes MCU, drivers and middleware */
 	atmel_start_init();
+	USART_util_init();
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cpu_irq_enable();
 
@@ -29,9 +42,16 @@ int main(void)
 		ATOMIC_BLOCK(ATOMIC_FORCEON) {
 			if (is_button_change()) {
 				clear_button_change();
+				bool button = button_state_on;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
-					HEART_set_level(button_state_on);
-					USART_puts(button_state_on ? "ON\r\n" : "OFF\r\n");
+					HEART_set_level(button);
+					uint16_t ctime = read_time();
+					if (button) {
+						start_time = ctime;
+					} else {
+						end_time = ctime;
+						print_time(end_time - start_time);
+					}
 				}
 			}
 
@@ -41,6 +61,10 @@ int main(void)
 					wdt_reset();
 					animate_glow();
 				}
+			}
+
+			while (in_buf_length() > 0) {
+				putchar(getchar());
 			}
 		}
 

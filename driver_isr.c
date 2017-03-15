@@ -25,19 +25,18 @@ static inline void handle_button_state_change(void) {
 
 ISR(USART_RX_vect)
 {
-	char c = USART_getc();
-	USART_putc(c);
+	USART_in_buffer[USART_in_end++] = USART_getc();
+	if (USART_in_end == BUFLEN) USART_in_end = 0;
 	HEART_toggle_level();
 }
 
 ISR(USART_UDRE_vect)
 {
-	char c = *(USART_buffer++);
-	if (c != 0) {
-		USART_putc(c);
+	if (USART_out_begin != USART_out_end) {
+		USART_putc(USART_out_buffer[USART_out_begin++]);
+		if (USART_out_begin == BUFLEN) USART_out_begin = 0;
 	} else {
 		USART_disable_udre();
-		USART_buffer = NULL;
 	}
 }
 
