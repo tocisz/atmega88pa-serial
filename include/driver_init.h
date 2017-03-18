@@ -19,6 +19,8 @@
 #include <sysctrl.h>
 #include <wdt.h>
 #include <exint.h>
+#include <adc.h>
+#include <tc8.h>
 #include <tc8.h>
 #include <tc8.h>
 #include <usart.h>

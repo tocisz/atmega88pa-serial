@@ -64,3 +64,10 @@ ISR(PCINT1_vect)
 	// 1 can give arbitrary small delay (we don't reset timer)
 	button_block = 2;
 }
+
+ISR(ADC_vect)
+{
+	uint8_t l = ADCL;
+	uint8_t h = ADCH;
+	adcv = (h<<8) + l;
+}

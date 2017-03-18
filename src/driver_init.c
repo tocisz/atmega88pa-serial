@@ -63,11 +63,18 @@ void system_init()
 	    // <true"> High
 	    false);
 
+	// PORT on PC4
+
+	// Disable digital pin circuitry
+	Analog_set_dir(PORT_DIR_OFF);
+
 	sysctrl_init();
 
 	WDT_0_init();
 
 	exint_0_init();
+
+	ADC_0_init();
 
 	tc8_0_init();
 

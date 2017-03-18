@@ -4,6 +4,15 @@
 
 // <<< Use Configuration Wizard in Context Menu >>>
 
+// <h> ADC Clock Settings
+// <y> ADC Clock source
+// <CLKadc"> CLKadc
+// <i> This defines the clock source for the ADC module
+// <id> adc_clock_source
+#define CONF_ADC_SRC CLKadc
+
+// </h>
+
 // <h> TC0 Clock Settings
 // <y> TC0 Clock source
 // <CLKio"> CLKio
@@ -20,6 +29,15 @@
 // <i> This defines the clock source for the TC2 module
 // <id> tc2_clock_source
 #define CONF_TC2_SRC CLKio
+
+// </h>
+
+// <h> TC1 Clock Settings
+// <y> TC1 Clock source
+// <CLKio"> CLKio
+// <i> This defines the clock source for the TC1 module
+// <id> tc16_clock_source
+#define CONF_TC1_SRC CLKio
 
 // </h>
 

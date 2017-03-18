@@ -74,6 +74,37 @@ drivers:
     variant: null
     clocks:
       domain_group: null
+  ADC_0:
+    user_label: ADC_0
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::ADC::driver_config_definition::ADC::Drivers:ADC.Init:'
+    functionality: ADC
+    api: 'Drivers:ADC_Init:'
+    configuration:
+      adcsra_adate: true
+      adcsra_aden: true
+      adcsra_adie: true
+      adcsra_adps: '16'
+      adcsrb_acme: false
+      adcsrb_adts: Timer/Counter0 Overflow
+      admux_adlar: false
+      admux_mux: ADC Single Ended Input pin 4
+      admux_refs: Internal 1.1V Voltage Reference with external capacitor at AREF
+        pin
+      didr0_adc0d: true
+      didr0_adc1d: true
+      didr0_adc2d: true
+      didr0_adc3d: true
+      didr0_adc4d: false
+      didr0_adc5d: true
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: ADC
+          input: CLKadc
+        configuration:
+          adc_clock_source: CLKadc
   TIMER_0:
     user_label: TIMER_0
     definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::TC0::driver_config_definition::Mode.0.Normal::Drivers:TC8.Init:'
@@ -181,6 +212,12 @@ pads:
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB0
     mode: Digital output
     user_label: HEART
+    configuration: null
+  Analog:
+    name: PC4
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PC4
+    mode: Analog
+    user_label: Analog
     configuration: null
   BUTTON:
     name: PC5
