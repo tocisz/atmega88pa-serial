@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-#define BUFLEN 8
+#define BUFLEN 16
 
 extern char USART_in_buffer[BUFLEN];
 extern uint8_t USART_in_begin;

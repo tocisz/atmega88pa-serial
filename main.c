@@ -22,8 +22,17 @@ static inline void animate_glow(void) {
 
 // uint16_t start_time, end_time;
 
+#define READ_CNT_MAX 32;
+uint8_t read_cnt = READ_CNT_MAX;
+
 uint16_t min = 0xffff;
 uint16_t max = 0;
+
+static inline void reset_min_max() {
+	min = 0xffff;
+	max = 0;
+}
+
 char print_buffer[6];
 void print_param(char *name, uint16_t val) {
 	itoa(val, print_buffer, 10);
@@ -32,16 +41,22 @@ void print_param(char *name, uint16_t val) {
 }
 
 void read_adc(void) {
-	if (out_buf_length() > 0)
-		return;
-
 	uint16_t val = read_adcv();
 	if (val > max) {
-		print_param("max:", max=val);
+		max=val;
 	}
 	if (val < min) {
-		print_param("min:", min=val);
+		min=val;
 	}
+	if (--read_cnt > 0)
+		return;
+
+	print_param("min:", min);
+	print_param("max:", max);
+	puts("");
+
+	read_cnt = READ_CNT_MAX;
+	reset_min_max();
 }
 
 int main(void)
@@ -66,8 +81,6 @@ int main(void)
 						// start_time = ctime;
 					} else {
 						// end_time = ctime;
-						min = 0xffff;
-						max = 0;
 					}
 				}
 			}
