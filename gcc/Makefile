@@ -37,6 +37,7 @@ src/exint.o \
 src/tc8.o \
 src/usart.o \
 src/wdt.o \
+src/adc.o \
 atmel_start.o \
 src/ccp.o \
 src/protected_io.o \
@@ -51,6 +52,7 @@ OBJS_AS_ARGS +=  \
 "src/tc8.o" \
 "src/usart.o" \
 "src/wdt.o" \
+"src/adc.o" \
 "atmel_start.o" \
 "src/ccp.o" \
 "src/protected_io.o" \

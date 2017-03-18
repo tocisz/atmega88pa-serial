@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART related functionality declaration.
+ * \brief ADC related functionality implementation.
 *
  * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
@@ -41,75 +41,34 @@
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifndef _USART_H_INCLUDED
-#define _USART_H_INCLUDED
-
-#include <compiler.h>
-#include <driver_init.h>
+#include <adc.h>
 
 /**
- * \addtogroup usart USART driver
- *
- * \section usart_rev Revision History
- * - v0.0.0.1 Initial Commit
- *
- *@{
+ * \brief Initialize adc interface
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-int8_t USART_init();
-
-/**
- * \brief Check if USART transmitt buffer is empty
- */
-static inline int8_t USART_tx_empty()
+int8_t ADC_0_init()
 {
-	return UCSR0A & (1 << UDRE0);
-}
+	/* Enable ADC */
+	PRR &= ~(1 << PRADC);
 
-/**
- * \brief Check if USART receive buffer is full
- */
-static inline int8_t USART_rx_full()
-{
-	return UCSR0A & (1 << RXC0);
-}
+	ADMUX = (0x03 << REFS0) /* Internal 1.1V Voltage Reference with external capacitor at AREF pin */
+	        | (0 << ADLAR)  /* Left Adjust Result: disabled */
+	        | (0x04 << MUX0) /* ADC Single Ended Input pin 4 */;
 
-/**
- * \brief Check if USART data is transmitted
- */
-static inline int8_t USART_data_transmitted()
-{
-	return UCSR0A & (1 << TXC0);
-}
+	ADCSRA = (1 << ADEN)    /* ADC: enabled */
+	         | (1 << ADATE) /* Auto Trigger: enabled */
+	         | (1 << ADIE)  /* ADC Interrupt: enabled */
+	         | (0x04 << ADPS0) /* 16 */;
 
-/**
- * \brief Read one character from USART
- */
-static inline uint8_t USART_getc()
-{
-	return UDR0;
-}
+	ADCSRB = (0x04 << ADTS0) /* Timer/Counter0 Overflow */
+	         | (0 << ACME) /* Analog Comparator Multiplexer: disabled */;
 
-/**
- * \brief Write one character on USART
- */
-static inline int8_t USART_putc(const uint8_t data)
-{
-	UDR0 = data;
+	DIDR0 = (1 << ADC0D)   /* Digital Input: disabled */
+	        | (1 << ADC1D) /* Digital Input: disabled */
+	        | (1 << ADC2D) /* Digital Input: disabled */
+	        | (1 << ADC3D) /* Digital Input: disabled */
+	        | (0 << ADC4D) /* Digital Input: enabled */
+	        | (1 << ADC5D) /* Digital Input: disabled */;
 
 	return 0;
 }
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* _USART_H_INCLUDED */

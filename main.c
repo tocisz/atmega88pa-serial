@@ -20,12 +20,29 @@ static inline void animate_glow(void) {
 #include "events.h"
 #include "usart_util.h"
 
-uint16_t start_time, end_time;
+// uint16_t start_time, end_time;
 
+uint16_t min = 0xffff;
+uint16_t max = 0;
 char print_buffer[6];
-void print_time(uint16_t val) {
-	itoa(val, print_buffer, 10);
-	puts(print_buffer);
+void read_adc(void) {
+	if (out_buf_length() > 0)
+		return;
+
+	uint16_t val = read_adcv();
+
+	if (val > max) {
+		max = val;
+		itoa(val, print_buffer, 10);
+		fputs("max:", stdout);
+		puts(print_buffer);
+	}
+	if (val < min) {
+		min = val;
+		itoa(val, print_buffer, 10);
+		fputs("min:", stdout);
+		puts(print_buffer);
+	}
 }
 
 int main(void)
@@ -45,12 +62,13 @@ int main(void)
 				bool button = button_state_on;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					HEART_set_level(button);
-					uint16_t ctime = read_time();
+					// uint16_t ctime = read_time();
 					if (button) {
-						start_time = ctime;
+						// start_time = ctime;
 					} else {
-						end_time = ctime;
-						print_time(end_time - start_time);
+						// end_time = ctime;
+						min = 0xffff;
+						max = 0;
 					}
 				}
 			}
@@ -60,6 +78,7 @@ int main(void)
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					wdt_reset();
 					animate_glow();
+					read_adc();
 				}
 			}
 

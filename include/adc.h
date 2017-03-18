@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART related functionality declaration.
+ * \brief ADC related functionality declaration.
 *
  * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
@@ -45,71 +45,29 @@
 extern "C" {
 #endif
 
-#ifndef _USART_H_INCLUDED
-#define _USART_H_INCLUDED
+#ifndef _ADC_H_INCLUDED
+#define _ADC_H_INCLUDED
 
 #include <compiler.h>
-#include <driver_init.h>
 
 /**
- * \addtogroup usart USART driver
+ * \addtogroup adc ADC driver
  *
- * \section usart_rev Revision History
+ * \section adc_rev Revision History
  * - v0.0.0.1 Initial Commit
  *
  *@{
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-int8_t USART_init();
-
 /**
- * \brief Check if USART transmitt buffer is empty
+ * \brief Initialize ADC interface
+ *
+ * \return Initialization status.
  */
-static inline int8_t USART_tx_empty()
-{
-	return UCSR0A & (1 << UDRE0);
-}
-
-/**
- * \brief Check if USART receive buffer is full
- */
-static inline int8_t USART_rx_full()
-{
-	return UCSR0A & (1 << RXC0);
-}
-
-/**
- * \brief Check if USART data is transmitted
- */
-static inline int8_t USART_data_transmitted()
-{
-	return UCSR0A & (1 << TXC0);
-}
-
-/**
- * \brief Read one character from USART
- */
-static inline uint8_t USART_getc()
-{
-	return UDR0;
-}
-
-/**
- * \brief Write one character on USART
- */
-static inline int8_t USART_putc(const uint8_t data)
-{
-	UDR0 = data;
-
-	return 0;
-}
+int8_t ADC_0_init();
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _USART_H_INCLUDED */
+#endif /* _ADC_H_INCLUDED */
