@@ -22,15 +22,17 @@ static inline void animate_glow(void) {
 
 // uint16_t start_time, end_time;
 
-#define READ_CNT_MAX 32;
-uint8_t read_cnt = READ_CNT_MAX;
+bool on = false;
 
-uint16_t min = 0xffff;
-uint16_t max = 0;
+#define MIDDLE_VAL 460
+uint16_t low_cnt = 0;
+uint16_t high_cnt = 0;
 
-static inline void reset_min_max() {
-	min = 0xffff;
-	max = 0;
+bool state_high = false;
+
+static inline void reset_cnt() {
+	low_cnt = 0;
+	high_cnt = 0;
 }
 
 char print_buffer[6];
@@ -40,23 +42,39 @@ void print_param(char *name, uint16_t val) {
 	puts(print_buffer);
 }
 
+void print_align(uint16_t val) {
+	itoa(val, print_buffer, 10);
+	uint8_t len = strlen(print_buffer);
+	for (uint8_t i = 4-len; i > 0; --i) {
+		putchar(' ');
+	}
+	fputs(print_buffer, stdout);
+}
+
+static inline void print_result() {
+	print_align(low_cnt);
+	print_align(high_cnt);
+	putchar('\n');
+}
+
 void read_adc(void) {
 	uint16_t val = read_adcv();
-	if (val > max) {
-		max=val;
+	if (state_high) {
+		if (val > MIDDLE_VAL) {
+			++high_cnt;
+		} else {
+			print_result();
+			state_high = false;
+			low_cnt = 1;
+		}
+	} else { //state_low
+		if (val < MIDDLE_VAL) {
+			++low_cnt;
+		} else {
+			state_high = true;
+			high_cnt = 1;
+		}
 	}
-	if (val < min) {
-		min=val;
-	}
-	if (--read_cnt > 0)
-		return;
-
-	print_param("min:", min);
-	print_param("max:", max);
-	puts("");
-
-	read_cnt = READ_CNT_MAX;
-	reset_min_max();
 }
 
 int main(void)
@@ -78,9 +96,7 @@ int main(void)
 					HEART_set_level(button);
 					// uint16_t ctime = read_time();
 					if (button) {
-						// start_time = ctime;
-					} else {
-						// end_time = ctime;
+						on = !on;
 					}
 				}
 			}
@@ -90,7 +106,8 @@ int main(void)
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					wdt_reset();
 					animate_glow();
-					read_adc();
+					if (on)
+						read_adc();
 				}
 			}
 
