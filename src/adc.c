@@ -51,7 +51,7 @@ int8_t ADC_0_init()
 	/* Enable ADC */
 	PRR &= ~(1 << PRADC);
 
-	ADMUX = (0x03 << REFS0) /* Internal 1.1V Voltage Reference with external capacitor at AREF pin */
+	ADMUX = (0x01 << REFS0) /* AVCC with external capacitor at AREF pin */
 	        | (0 << ADLAR)  /* Left Adjust Result: disabled */
 	        | (0x04 << MUX0) /* ADC Single Ended Input pin 4 */;
 
