@@ -1,6 +1,6 @@
 #include <atmel_start.h>
 
-#define BUFLEN 8
+#define BUFLEN 16
 
 extern char USART_in_buffer[BUFLEN];
 extern uint8_t USART_in_begin;
