@@ -58,9 +58,9 @@ static inline void print_result() {
 }
 
 void read_adc(void) {
-	uint16_t val = read_adcv();
+	bool val = Analog_get_level();
 	if (state_high) {
-		if (val > MIDDLE_VAL) {
+		if (val) {
 			++high_cnt;
 		} else {
 			print_result();
@@ -68,7 +68,7 @@ void read_adc(void) {
 			low_cnt = 1;
 		}
 	} else { //state_low
-		if (val < MIDDLE_VAL) {
+		if (!val) {
 			++low_cnt;
 		} else {
 			state_high = true;

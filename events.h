@@ -9,7 +9,7 @@ extern volatile bool button_state_on;
 
 extern volatile uint16_t time;
 
-extern volatile uint16_t adcv;
+// extern volatile uint16_t adcv;
 
 #define BTN_CHG 0
 #define NEW_512HZ_CYCLE 1
@@ -47,10 +47,10 @@ static inline uint16_t read_time(void) {
   return ret;
 }
 
-static inline uint16_t read_adcv(void) {
-  uint16_t ret;
-  ATOMIC_BLOCK(ATOMIC_FORCEON) {
-    ret = adcv;
-  }
-  return ret;
-}
+// static inline uint16_t read_adcv(void) {
+//   uint16_t ret;
+//   ATOMIC_BLOCK(ATOMIC_FORCEON) {
+//     ret = adcv;
+//   }
+//   return ret;
+// }
