@@ -6,7 +6,7 @@ int main(void)
 	/* Initializes MCU, drivers and middleware */
 	atmel_start_init();
 
-	PORTD = 1;
+	PORTD = 128;
 	sei();
 
 	while (true) {

@@ -119,4 +119,10 @@ pads:
     mode: Digital output
     user_label: PD6
     configuration: null
+  PD7:
+    name: PD7
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PD7
+    mode: Digital output
+    user_label: PD7
+    configuration: null
 toolchain_options: []

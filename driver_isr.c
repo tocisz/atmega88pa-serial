@@ -9,7 +9,7 @@
 #include <atmel_start.h>
 #include <compiler.h>
 
-bool going_up = true;
+bool going_up = false;
 
 ISR(TIMER0_OVF_vect)
 {
