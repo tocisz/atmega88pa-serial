@@ -9,8 +9,21 @@
 #include <atmel_start.h>
 #include <compiler.h>
 
+bool going_up = true;
+
 ISR(TIMER0_OVF_vect)
 {
-
-	/* Insert your TIMER_0 timer overflow interrupt handling code here */
+	uint8_t d = PORTD;
+	if (going_up) {
+		d <<= 1;
+		if (d == 128) {
+			going_up = false;
+		}
+	} else {
+		d >>= 1;
+		if (d == 1) {
+			going_up = true;
+		}
+	}
+	PORTD = d;
 }
