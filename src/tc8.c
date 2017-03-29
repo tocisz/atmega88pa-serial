@@ -77,7 +77,7 @@ int8_t TIMER_2_init()
 	         (0 << WGM21) | (1 << WGM20);    // Mode 1 Phase Correct
 
 	TCCR2B = (0 << WGM22) |                           // Mode 1 Phase Correct
-	         (0 << CS22) | (0 << CS21) | (1 << CS20); // No prescaling
+	         (1 << CS22) | (0 << CS21) | (1 << CS20); // IO clock divided by 128
 
 	TIMSK2 = (0 << OCIE2B) | // Disable output compare match B interrupt
 	         (0 << OCIE2A) | // Disable output compare match A interrupt

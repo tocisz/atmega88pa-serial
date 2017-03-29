@@ -65,9 +65,9 @@ ISR(PCINT1_vect)
 	button_block = 2;
 }
 
-ISR(ADC_vect)
-{
-	uint8_t l = ADCL;
-	uint8_t h = ADCH;
-	adcv = (h<<8) + l;
-}
+// ISR(ADC_vect)
+// {
+// 	uint8_t l = ADCL;
+// 	uint8_t h = ADCH;
+// 	adcv = (h<<8) + l;
+// }

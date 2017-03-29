@@ -74,7 +74,7 @@ void system_init()
 
 	exint_0_init();
 
-	ADC_0_init();
+	//ADC_0_init();
 
 	tc8_0_init();
 
