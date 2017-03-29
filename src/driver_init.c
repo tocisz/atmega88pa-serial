@@ -9,54 +9,94 @@
 #include "driver_init.h"
 #include <system.h>
 
-void exint_0_init(void)
-{
-
-	// Set pin direction to input
-	BUTTON_set_dir(PORT_DIR_IN);
-
-	BUTTON_set_pull_mode(
-	    // <y> Pull configuration
-	    // <id> pad_pull_config
-	    // <PORT_PULL_OFF"> Off
-	    // <PORT_PULL_UP"> Pull-up
-	    PORT_PULL_UP);
-
-	EXTERNAL_IRQ_0_init();
-}
-
 void tc8_0_init(void)
 {
 
 	TIMER_0_init();
 }
 
-void tc8_2_init(void)
+void system_init()
 {
+	mcu_init();
+
+	// PORT on PD0
 
 	// Set pin direction to output
-	GLOW_set_dir(PORT_DIR_OUT);
+	PD0_set_dir(PORT_DIR_OUT);
 
-	GLOW_set_level(
+	PD0_set_level(
 	    // <y> Initial level
 	    // <id> pad_initial_level
 	    // <false"> Low
 	    // <true"> High
 	    false);
 
-	TIMER_2_init();
-}
-
-void system_init()
-{
-	mcu_init();
-
-	// PORT on PB0
+	// PORT on PD1
 
 	// Set pin direction to output
-	HEART_set_dir(PORT_DIR_OUT);
+	PD1_set_dir(PORT_DIR_OUT);
 
-	HEART_set_level(
+	PD1_set_level(
+	    // <y> Initial level
+	    // <id> pad_initial_level
+	    // <false"> Low
+	    // <true"> High
+	    false);
+
+	// PORT on PD2
+
+	// Set pin direction to output
+	PD2_set_dir(PORT_DIR_OUT);
+
+	PD2_set_level(
+	    // <y> Initial level
+	    // <id> pad_initial_level
+	    // <false"> Low
+	    // <true"> High
+	    false);
+
+	// PORT on PD3
+
+	// Set pin direction to output
+	PD3_set_dir(PORT_DIR_OUT);
+
+	PD3_set_level(
+	    // <y> Initial level
+	    // <id> pad_initial_level
+	    // <false"> Low
+	    // <true"> High
+	    false);
+
+	// PORT on PD4
+
+	// Set pin direction to output
+	PD4_set_dir(PORT_DIR_OUT);
+
+	PD4_set_level(
+	    // <y> Initial level
+	    // <id> pad_initial_level
+	    // <false"> Low
+	    // <true"> High
+	    false);
+
+	// PORT on PD5
+
+	// Set pin direction to output
+	PD5_set_dir(PORT_DIR_OUT);
+
+	PD5_set_level(
+	    // <y> Initial level
+	    // <id> pad_initial_level
+	    // <false"> Low
+	    // <true"> High
+	    false);
+
+	// PORT on PD6
+
+	// Set pin direction to output
+	PD6_set_dir(PORT_DIR_OUT);
+
+	PD6_set_level(
 	    // <y> Initial level
 	    // <id> pad_initial_level
 	    // <false"> Low
@@ -67,11 +107,5 @@ void system_init()
 
 	WDT_0_init();
 
-	exint_0_init();
-
 	tc8_0_init();
-
-	tc8_2_init();
-
-	USART_init();
 }

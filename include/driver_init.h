@@ -18,10 +18,7 @@
 
 #include <sysctrl.h>
 #include <wdt.h>
-#include <exint.h>
 #include <tc8.h>
-#include <tc8.h>
-#include <usart.h>
 
 #ifdef __cplusplus
 extern "C" {

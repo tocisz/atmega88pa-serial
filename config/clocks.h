@@ -13,25 +13,6 @@
 
 // </h>
 
-// <h> TC2 Clock Settings
-// <y> TC2 Clock source
-// <CLKio"> CLKio
-// <CLKasy"> CLKasy
-// <i> This defines the clock source for the TC2 module
-// <id> tc2_clock_source
-#define CONF_TC2_SRC CLKio
-
-// </h>
-
-// <h> USART Clock Settings
-// <y> USART Clock source
-// <CLKio"> CLKio
-// <i> This defines the clock source for the USART module
-// <id> usart_clock_source
-#define CONF_USART_SRC CLKio
-
-// </h>
-
 // <<< end of configuration section >>>
 
 #endif // CLOCKS_H

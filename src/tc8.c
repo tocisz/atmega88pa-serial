@@ -56,32 +56,11 @@ int8_t TIMER_0_init()
 	         (0 << WGM01) | (0 << WGM00);    // Mode 0 Normal
 
 	TCCR0B = (0 << WGM02) |                           // Mode 0 Normal
-	         (0 << CS02) | (1 << CS01) | (0 << CS00); // IO clock divided by 8
+	         (1 << CS02) | (0 << CS01) | (0 << CS00); // IO clock divided by 256
 
 	TIMSK0 = (0 << OCIE0B) | // Disable output compare match B interrupt
 	         (0 << OCIE0A) | // Disable output compare match A interrupt
 	         (1 << TOIE0);   // Enable overflow interrupt
-
-	return 0;
-}
-
-/**
- * \brief Initialize TIMER_2 interface
- */
-int8_t TIMER_2_init()
-{
-	/* Enable TC2 */
-	PRR &= ~(1 << PRTIM2);
-	TCCR2A = (0 << COM2A1) | (0 << COM2A0) | // Normal port operation, OCA disconnected
-	         (1 << COM2B1) | (0 << COM2B0) | // Normal port operation, OCA disconnected
-	         (0 << WGM21) | (1 << WGM20);    // Mode 1 Phase Correct
-
-	TCCR2B = (0 << WGM22) |                           // Mode 1 Phase Correct
-	         (0 << CS22) | (0 << CS21) | (1 << CS20); // No prescaling
-
-	TIMSK2 = (0 << OCIE2B) | // Disable output compare match B interrupt
-	         (0 << OCIE2A) | // Disable output compare match A interrupt
-	         (0 << TOIE2);   // Disable overflow interrupt
 
 	return 0;
 }

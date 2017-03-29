@@ -90,33 +90,6 @@ static inline void TIMER_0_set_comp_b(uint8_t value)
 	OCR0B = value;
 }
 
-/**
- * \brief Initialize TIMER_2 interface
- *
- * \return Initialization status.
- */
-int8_t TIMER_2_init();
-
-/**
- * \brief Set compare channel A value
- *
- * \param[in] value The new compare value to set
- */
-static inline void TIMER_2_set_comp_a(uint8_t value)
-{
-	OCR2A = value;
-}
-
-/**
- * \brief Set compare channel B value
- *
- * \param[in] value The new compare value to set
- */
-static inline void TIMER_2_set_comp_b(uint8_t value)
-{
-	OCR2B = value;
-}
-
 #ifdef __cplusplus
 }
 #endif
