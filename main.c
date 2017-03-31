@@ -112,7 +112,12 @@ int main(void)
 			}
 
 			while (in_buf_length() > 0) {
-				putchar(getchar());
+				char c = getchar();
+				if (c == '\r') {
+					on = !on;
+					//putchar(on?'1':'0');
+				}
+				putchar(c);
 			}
 		}
 
