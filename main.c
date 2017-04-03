@@ -100,12 +100,19 @@ int main(void)
 				while (in_buf_length() > 0) {
 					char c = getchar();
 					if (c == 'c') {
+						capture_on = true;
 						start_capture();
+						puts("C.ON");
 					} else if (c == 'p') {
 						capture_print();
 					} else {
 						putchar(c);
 					}
+				}
+
+				if (capture_on && capture_ptr == 255) {
+					capture_on = false;
+					puts("COFF");
 				}
 			}
 		}
