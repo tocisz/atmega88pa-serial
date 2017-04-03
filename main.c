@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 /////////////////// GOLW //////////////////
+#ifdef GLOW
 uint8_t power = 0;
 int8_t dir = 1;
 
@@ -15,20 +16,18 @@ static inline void animate_glow(void) {
 		dir = -dir;
 	}
 }
+#endif
 ///////////////////////////////////////////
 
 #include "events.h"
 #include "usart_util.h"
 
-// uint16_t start_time, end_time;
+// bool on = false;
+bool capture_on = false;
+bool print_on = false;
 
-bool on = false;
-
-#define MIDDLE_VAL 460
 uint16_t low_cnt = 0;
 uint16_t high_cnt = 0;
-
-bool state_high = false;
 
 static inline void reset_cnt() {
 	low_cnt = 0;
@@ -37,17 +36,19 @@ static inline void reset_cnt() {
 
 char print_buffer[6];
 void print_param(char *name, uint16_t val) {
-	itoa(val, print_buffer, 10);
+	// use long to have value unsigned
+	ltoa(val, print_buffer, 10);
 	fputs(name, stdout);
 	puts(print_buffer);
 }
 
 void print_align(uint16_t val) {
-	itoa(val, print_buffer, 10);
+	ltoa(val, print_buffer, 10);
 	uint8_t len = strlen(print_buffer);
-	for (uint8_t i = 4-len; i > 0; --i) {
+	for (int8_t i = 5-len; i > 0; --i) {
 		putchar(' ');
 	}
+	putchar(' ');
 	fputs(print_buffer, stdout);
 }
 
@@ -57,23 +58,19 @@ static inline void print_result() {
 	putchar('\n');
 }
 
-void read_adc(void) {
-	bool val = Analog_get_level();
-	if (state_high) {
-		if (val) {
-			++high_cnt;
-		} else {
-			print_result();
-			state_high = false;
-			low_cnt = 1;
-		}
-	} else { //state_low
-		if (!val) {
-			++low_cnt;
-		} else {
-			state_high = true;
-			high_cnt = 1;
-		}
+void start_capture(void) {
+	capture_ptr = 0;
+}
+
+void capture_print(void) {
+	uint8_t print_ptr = 0;
+	while (print_ptr < 254) {
+		low_cnt = capture[print_ptr++];
+		high_cnt = capture[print_ptr++];
+
+		while (out_buf_length() > 0); //wait
+
+		print_result();
 	}
 }
 
@@ -89,38 +86,31 @@ int main(void)
 	for(;;) {
 
 		ATOMIC_BLOCK(ATOMIC_FORCEON) {
-			if (is_button_change()) {
-				clear_button_change();
-				bool button = button_state_on;
-				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
-					HEART_set_level(button);
-					// uint16_t ctime = read_time();
-					if (button) {
-						on = !on;
-					}
-				}
-			}
 
 			if (is_new_512hz_cycle()) {
 				clear_new_512hz_cycle();
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
-					wdt_reset();
+					#ifdef GLOW
 					animate_glow();
-					if (on)
-						read_adc();
+					#endif
 				}
 			}
 
-			while (in_buf_length() > 0) {
-				char c = getchar();
-				if (c == '\r') {
-					on = !on;
-					//putchar(on?'1':'0');
+			NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
+				while (in_buf_length() > 0) {
+					char c = getchar();
+					if (c == 'c') {
+						start_capture();
+					} else if (c == 'p') {
+						capture_print();
+					} else {
+						putchar(c);
+					}
 				}
-				putchar(c);
 			}
 		}
 
+		wdt_reset();
 		sleep_mode();
 
 	}

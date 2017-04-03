@@ -47,6 +47,11 @@ void tc8_2_init(void)
 	TIMER_2_init();
 }
 
+void tc16_1_init(void)
+{
+	TIMER_1_init();
+}
+
 void system_init()
 {
 	mcu_init();
@@ -79,6 +84,8 @@ void system_init()
 	tc8_0_init();
 
 	tc8_2_init();
+
+	tc16_1_init();
 
 	USART_init();
 }
