@@ -12,6 +12,9 @@
 #include "events.h"
 #include "usart_util.h"
 
+//#define BUTTON
+#define CAPTURE
+
 // contdown to limit button instability
 uint8_t button_block = 0;
 
@@ -54,8 +57,13 @@ ISR(TIMER0_OVF_vect)
 	}
 }
 
+#ifdef CAPTURE
+int16_t last_capture;
+#endif
+
 ISR(PCINT1_vect)
 {
+#ifdef BUTTON
 	if (button_block)
 		return;
 
@@ -63,11 +71,13 @@ ISR(PCINT1_vect)
 
 	// 1 can give arbitrary small delay (we don't reset timer)
 	button_block = 2;
+#endif
+#ifdef CAPTURE
+  uint16_t time = TCNT1;
+	uint16_t timediff = time - last_capture;
+	last_capture = time;
+	if (capture_ptr < 255) {
+		capture[capture_ptr++] = timediff;
+	}
+#endif
 }
-
-// ISR(ADC_vect)
-// {
-// 	uint8_t l = ADCL;
-// 	uint8_t h = ADCH;
-// 	adcv = (h<<8) + l;
-// }

@@ -35,6 +35,7 @@ src/driver_init.o \
 driver_isr.o \
 src/exint.o \
 src/tc8.o \
+src/tc16.o \
 src/usart.o \
 src/wdt.o \
 src/adc.o \
@@ -50,6 +51,7 @@ OBJS_AS_ARGS +=  \
 "driver_isr.o" \
 "src/exint.o" \
 "src/tc8.o" \
+"src/tc16.o" \
 "src/usart.o" \
 "src/wdt.o" \
 "src/adc.o" \
@@ -68,6 +70,7 @@ DEPS_AS_ARGS +=  \
 "driver_isr.d" \
 "src/exint.d" \
 "src/tc8.d" \
+"src/tc16.d" \
 "src/usart.d" \
 "src/wdt.d" \
 "atmel_start.d" \
