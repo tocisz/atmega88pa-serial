@@ -44,6 +44,9 @@
 
 int8_t EXTERNAL_IRQ_0_init()
 {
+	EICRA = (0 << ISC01) | (1 << ISC00); // Any logical change on ISC0 generates an interrupt request
+
+	EIMSK = (1 << INT0); // Enable external interrupt request 0
 
 	PCICR = (1 << PCIE1); // Enable pin change interrupt 1
 

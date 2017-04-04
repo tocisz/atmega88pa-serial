@@ -63,15 +63,19 @@ int16_t last_capture;
 
 ISR(PCINT1_vect)
 {
-#ifdef BUTTON
-	if (button_block)
-		return;
+	#ifdef BUTTON
+		if (button_block)
+			return;
 
-	handle_button_state_change();
+		handle_button_state_change();
 
-	// 1 can give arbitrary small delay (we don't reset timer)
-	button_block = 2;
-#endif
+		// 1 can give arbitrary small delay (we don't reset timer)
+		button_block = 2;
+	#endif
+}
+
+ISR(INT0_vect)
+{
 #ifdef CAPTURE
   uint16_t time = TCNT1;
 	uint16_t timediff = time - last_capture;
