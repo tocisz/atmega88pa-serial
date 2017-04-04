@@ -37,7 +37,7 @@ drivers:
       pm_pud: false
       pm_se: false
       pm_sm: Idle
-      prescaler_divider: '8'
+      prescaler_divider: '1'
     optional_signals: []
     variant: null
     clocks:
@@ -61,9 +61,16 @@ drivers:
     functionality: External_IRQ
     api: 'Drivers:EXINT_Init:'
     configuration:
-      exint_isc0: The low level of ISC0 generates an interrupt request
+      exint_isc0: Any logical change on ISC0 generates an interrupt request
       exint_isc1: The low level of ISC1 generates an interrupt request
     optional_signals:
+    - identifier: EXTERNAL_IRQ_0:INT/0
+      pad: PD2
+      mode: Enabled
+      configuration: null
+      definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::optional_signal_definition::EXINT.INT.0
+      name: EXINT/INT/0
+      label: INT/0
     - identifier: EXTERNAL_IRQ_0:PCINT/13
       pad: PC5
       mode: Enabled
@@ -74,37 +81,6 @@ drivers:
     variant: null
     clocks:
       domain_group: null
-  ADC_0:
-    user_label: ADC_0
-    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::ADC::driver_config_definition::ADC::Drivers:ADC.Init:'
-    functionality: ADC
-    api: 'Drivers:ADC_Init:'
-    configuration:
-      adcsra_adate: true
-      adcsra_aden: true
-      adcsra_adie: true
-      adcsra_adps: '16'
-      adcsrb_acme: false
-      adcsrb_adts: Timer/Counter0 Overflow
-      admux_adlar: false
-      admux_mux: ADC Single Ended Input pin 4
-      admux_refs: Internal 1.1V Voltage Reference with external capacitor at AREF
-        pin
-      didr0_adc0d: true
-      didr0_adc1d: true
-      didr0_adc2d: true
-      didr0_adc3d: true
-      didr0_adc4d: false
-      didr0_adc5d: true
-    optional_signals: []
-    variant: null
-    clocks:
-      domain_group:
-        nodes:
-        - name: ADC
-          input: CLKadc
-        configuration:
-          adc_clock_source: CLKadc
   TIMER_0:
     user_label: TIMER_0
     definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::TC0::driver_config_definition::Mode.0.Normal::Drivers:TC8.Init:'
@@ -128,25 +104,18 @@ drivers:
           tc8_clock_source: CLKio
   TIMER_2:
     user_label: TIMER_2
-    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::TC2::driver_config_definition::Mode.1.Phase.Correct::Drivers:TC8.Init:'
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::TC2::driver_config_definition::Mode.0.Normal::Drivers:TC8.Init:'
     functionality: Timer
     api: 'Drivers:TC8_Init:'
     configuration:
       tc8_async_exclk: false
       tc8_coma: Normal port operation, OCA disconnected
-      tc8_comb: Clear OCB on up-counting, set OCB on down-counting
-      tc8_cs: No prescaling
+      tc8_comb: Normal port operation, OCB disconnected
+      tc8_cs: No clock source (Timer/Counter stopped)
       tc8_ociea: false
       tc8_ocieb: false
       tc8_toie: false
-    optional_signals:
-    - identifier: TIMER_2:OCB
-      pad: PD3
-      mode: Enabled
-      configuration: null
-      definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::optional_signal_definition::TC2.OCB
-      name: TC2/OCB
-      label: OCB
+    optional_signals: []
     variant: null
     clocks:
       domain_group:
@@ -155,6 +124,30 @@ drivers:
           input: CLKio
         configuration:
           tc2_clock_source: CLKio
+  TIMER_1:
+    user_label: TIMER_1
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::TC1::driver_config_definition::Mode.0.Normal::Drivers:TC16.Init:'
+    functionality: Timer
+    api: 'Drivers:TC16_Init:'
+    configuration:
+      tc16_coma: Normal port operation, OCA disconnected
+      tc16_comb: Normal port operation, OCB disconnected
+      tc16_cs: No clock source (Timer/Counter stopped)
+      tc16_ices: Falling edge will trigger input capture
+      tc16_icie: true
+      tc16_icnc: false
+      tc16_ociea: false
+      tc16_ocieb: false
+      tc16_toie: false
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: TC16
+          input: CLKio
+        configuration:
+          tc16_clock_source: CLKio
   USART:
     user_label: USART
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::USART0::driver_config_definition::UART::Drivers:USART:USART.Init
@@ -201,11 +194,11 @@ pads:
     mode: Digital output
     user_label: PD1
     configuration: null
-  GLOW:
-    name: PD3
-    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PD3
-    mode: Digital output
-    user_label: GLOW
+  PD2:
+    name: PD2
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PD2
+    mode: Digital input
+    user_label: PD2
     configuration: null
   HEART:
     name: PB0

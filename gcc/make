@@ -1,1 +1,1 @@
-PATH=$PATH:../../../avr8-gnu-toolchain-linux_x86_64/bin make
+PATH=$PATH:../../../avr8-gnu-toolchain-linux_x86_64/bin make $@
