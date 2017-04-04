@@ -110,7 +110,7 @@ int main(void)
 					}
 				}
 
-				if (capture_on && capture_ptr == 255) {
+				if (capture_on && capture_ptr >= 254) {
 					capture_on = false;
 					puts("COFF");
 				}
