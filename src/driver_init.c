@@ -11,6 +11,15 @@
 
 void exint_0_init(void)
 {
+	// Set pin direction to input
+	PD2_set_dir(PORT_DIR_IN);
+
+	PD2_set_pull_mode(
+	    // <y> Pull configuration
+	    // <id> pad_pull_config
+	    // <PORT_PULL_OFF"> Off
+	    // <PORT_PULL_UP"> Pull-up
+	    PORT_PULL_OFF);
 
 	// Set pin direction to input
 	BUTTON_set_dir(PORT_DIR_IN);
@@ -33,17 +42,6 @@ void tc8_0_init(void)
 
 void tc8_2_init(void)
 {
-
-	// Set pin direction to output
-	GLOW_set_dir(PORT_DIR_OUT);
-
-	GLOW_set_level(
-	    // <y> Initial level
-	    // <id> pad_initial_level
-	    // <false"> Low
-	    // <true"> High
-	    false);
-
 	TIMER_2_init();
 }
 
@@ -78,8 +76,6 @@ void system_init()
 	WDT_0_init();
 
 	exint_0_init();
-
-	//ADC_0_init();
 
 	tc8_0_init();
 
