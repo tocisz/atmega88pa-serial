@@ -77,17 +77,16 @@ ISR(PCINT1_vect)
 ISR(INT0_vect)
 {
 #ifdef CAPTURE
-	if (capture_ptr >= 254)
-		return;
-
   uint16_t time = TCNT1;
 	uint8_t lvl = PD2_get_level();
 	uint16_t timediff = time - last_capture;
 	last_capture = time;
-	if ((capture_ptr%2) != (lvl?1:0)) {
+	if ((capture_write_ptr%2) != (lvl?1:0)) {
 		// we want state high on even indices (so why it's reversed?)
-		capture[capture_ptr++] = 0;
+		capture[capture_write_ptr] = 0;
+		capture_write_ptr = (capture_write_ptr+1)%256;
 	}
-	capture[capture_ptr++] = timediff;
+	capture[capture_write_ptr] = timediff;
+	capture_write_ptr = (capture_write_ptr+1)%256;
 #endif
 }
