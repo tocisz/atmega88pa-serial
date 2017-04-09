@@ -84,8 +84,8 @@ ISR(INT0_vect)
 	uint8_t lvl = PD2_get_level();
 	uint16_t timediff = time - last_capture;
 	last_capture = time;
-	if (capture_ptr%2 == lvl) {
-		// we want one on even indices
+	if ((capture_ptr%2) != (lvl?1:0)) {
+		// we want state high on even indices (so why it's reversed?)
 		capture[capture_ptr++] = 0;
 	}
 	capture[capture_ptr++] = timediff;
