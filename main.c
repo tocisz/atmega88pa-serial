@@ -43,8 +43,15 @@ uint16_t cycle_1st_high;
 
 #define BETWEEN(a,x,b) ((a<=x)&&(x<=b))
 
+void init_caputre() {
+	state = 0;
+	s_short = 0;
+	s_long = 0;
+	s_cycle = 0;
+}
+
 void process_capture() {
-	while (capture_write_ptr - capture_read_ptr >= 2) {
+	while ((capture_write_ptr&~1) != (capture_read_ptr&~1)) {
 		uint8_t i_up = capture_read_ptr;
 		uint8_t i_down = (capture_read_ptr+1)%256;
 		uint16_t l_up = capture[i_up];
@@ -54,24 +61,21 @@ void process_capture() {
 			cycle_1st_low = l_sum / 3;
 			cycle_1st_high = l_sum / 2;
 			state = 1;
-			putchar('1');
 		} else if ((state == 1 || state == 2 || state == 5)
 			&& (BETWEEN(250, l_up, 1000) && BETWEEN(cycle_1st_low, l_sum, cycle_1st_high))) {
 				s_short += l_up;
 				s_cycle += l_sum;
 				++state;
-				putchar('0'+state);
 		} else if ((state == 3 || state == 4 || state == 6)
 			&& (BETWEEN(1000, l_up, 2000) && BETWEEN(cycle_1st_low, l_sum, cycle_1st_high))) {
 				s_long += l_up;
 				s_cycle += l_sum;
 				++state;
-				putchar('0'+state);
-		} else {
-			if (state > 0) {
-				print_pair(l_up, l_down);
-			}
-			state = 0;
+		} else if (state > 0) {
+			putchar('F'); putchar('0'+state);
+			print_pair(l_up, l_down);
+			print_pair(cycle_1st_low, cycle_1st_high);
+			init_caputre();
 		}
 
 		capture_read_ptr = (capture_read_ptr+2)%256;
@@ -80,11 +84,10 @@ void process_capture() {
 		avg_short = s_short / 3;
 		avg_long = s_long / 3;
 		avg_cycle = s_cycle / 6;
-		puts("DING");
 		print_param("LO", avg_short);
 		print_param("HI", avg_long);
 		print_param("CY", avg_cycle);
-		state = 0;
+		init_caputre();
 	}
 }
 ///////////////////////////////////////////
@@ -106,6 +109,7 @@ void print_param(char *name, uint16_t val) {
 	ltoa(val, print_buffer, 10);
 	fputs(name, stdout);
 	puts(print_buffer);
+	while (out_buf_length() > 0); //wait
 }
 
 void print_align(uint16_t val) {
@@ -122,17 +126,19 @@ static inline void print_pair(uint16_t a, uint16_t b) {
 	print_align(a);
 	print_align(b);
 	putchar('\n');
+	while (out_buf_length() > 0); //wait
 }
 
 void capture_print(void) {
-	uint8_t print_ptr = 0;
-	while (print_ptr < 254) {
-		low_cnt = capture[print_ptr++];
+	// even number > capture_write_ptr
+	uint8_t print_ptr = ((capture_write_ptr & ~1) + 2)%256;
+
+	while ((print_ptr & ~1) != (capture_write_ptr & ~1)) {
+
 		high_cnt = capture[print_ptr++];
+		low_cnt = capture[print_ptr++];
 
-		while (out_buf_length() > 0); //wait
-
-		print_pair(low_cnt, high_cnt);
+		print_pair(high_cnt, low_cnt);
 	}
 }
 
@@ -141,6 +147,7 @@ int main(void)
 	/* Initializes MCU, drivers and middleware */
 	atmel_start_init();
 	USART_util_init();
+	init_caputre();
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cpu_irq_enable();
 
@@ -163,13 +170,19 @@ int main(void)
 					char c = getchar();
 					if (c == 'p') {
 						capture_print();
+					} else if (c == 's') {
+						print_param("STA", state);
+					} else if (c == 'w') {
+						print_param("WP ", capture_write_ptr);
+					} else if (c == 'r') {
+						print_param("RP ", capture_read_ptr);
 					} else {
 						putchar(c);
 					}
 				}
 			}
 
-			if (capture_write_ptr != capture_read_ptr) {
+			if ((capture_write_ptr&~1) != (capture_read_ptr&~1)) {
 			NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					process_capture();
 				}
