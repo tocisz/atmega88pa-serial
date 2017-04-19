@@ -71,8 +71,8 @@ void Capture::process_capture() {
 		uint16_t l_down = capture_buffer[i_down];
 		uint16_t l_sum = l_up + l_down;
 		if (BETWEEN(2500, l_up, 5000) && BETWEEN(2500, l_down, 5000)) {
-			cycle_1st_low = l_sum / 3;
-			cycle_1st_high = l_sum / 2;
+			cycle_1st_high = l_sum / 2; // 1/2 *2/3 * 5/4 + 1/6;
+			cycle_1st_low = cycle_1st_high / 2; // 1/2 *2/3 * 3/4;
 			state = 1;
 		} else if ((state == 1 || state == 2 || state == 5)
 			&& (BETWEEN(250, l_up, 1000) && BETWEEN(cycle_1st_low, l_sum, cycle_1st_high))) {
