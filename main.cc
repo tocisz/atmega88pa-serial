@@ -67,8 +67,8 @@ void Capture::process_capture() {
 	while ((capture_write_ptr&~1) != (capture_read_ptr&~1)) {
 		uint8_t i_up = capture_read_ptr;
 		uint8_t i_down = (capture_read_ptr+1)%256;
-		uint16_t l_up = capture[i_up];
-		uint16_t l_down = capture[i_down];
+		uint16_t l_up = capture_buffer[i_up];
+		uint16_t l_down = capture_buffer[i_down];
 		uint16_t l_sum = l_up + l_down;
 		if (BETWEEN(2500, l_up, 5000) && BETWEEN(2500, l_down, 5000)) {
 			cycle_1st_low = l_sum / 3;
@@ -140,23 +140,23 @@ void capture_print(void) {
 
 	while ((print_ptr & ~1) != (capture_write_ptr & ~1)) {
 
-		high_cnt = capture[print_ptr++];
-		low_cnt = capture[print_ptr++];
+		high_cnt = capture_buffer[print_ptr++];
+		low_cnt = capture_buffer[print_ptr++];
 
 		print_pair(high_cnt, low_cnt);
 	}
 }
 
-Capture cap;
 
 int main(void)
 {
 	/* Initializes MCU, drivers and middleware */
 	atmel_start_init();
 	USART_util_init();
-	//cap.init_caputre();
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cpu_irq_enable();
+
+	Capture capture;
 
 	/* Replace with your application code */
 	for(;;) {
@@ -178,20 +178,20 @@ int main(void)
 					if (c == 'p') {
 						capture_print();
 					} else if (c == 's') {
-						print_param("STA", cap.state);
+						print_param("STA", capture.state);
 					} else if (c == 'w') {
 						print_param("WP ", capture_write_ptr);
 					} else if (c == 'r') {
-						print_param("RP ", cap.capture_read_ptr);
+						print_param("RP ", capture.capture_read_ptr);
 					} else {
 						putchar(c);
 					}
 				}
 			}
 
-			if ((capture_write_ptr&~1) != (cap.capture_read_ptr&~1)) {
+			if ((capture_write_ptr&~1) != (capture.capture_read_ptr&~1)) {
 			NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
-					cap.process_capture();
+					capture.process_capture();
 				}
 			}
 
