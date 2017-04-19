@@ -83,6 +83,7 @@ OUTPUT_FILE_PATH +=$(OUTPUT_FILE_NAME).elf
 OUTPUT_FILE_PATH_AS_ARGS +=$(OUTPUT_FILE_NAME).elf
 
 vpath %.c ../
+vpath %.cc ../
 vpath %.s ../
 vpath %.S ../
 
@@ -118,6 +119,17 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 	@echo Building file: $<
 	@echo AVR/GNU C Compiler
 	$(QUOTE)avr-gcc$(QUOTE) -x c -DF_CPU=8000000 -DDEBUG -Os -ffunction-sections -g3 -Wall -c -std=gnu99 \
+-mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
+    -D__mega88__ \
+-I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \
+-MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
+
+	@echo Finished building: $<
+
+%.o: %.cc
+	@echo Building file: $<
+	@echo AVR/GNU C++ Compiler
+	$(QUOTE)avr-g++$(QUOTE) -x c++ -DF_CPU=8000000 -DDEBUG -Os -ffunction-sections -g3 -Wall -c -std=c++11 \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
     -D__mega88__ \
 -I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \

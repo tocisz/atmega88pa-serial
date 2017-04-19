@@ -41,10 +41,6 @@
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef _WDT_H_INCLUDED
 #define _WDT_H_INCLUDED
 
@@ -58,6 +54,10 @@ extern "C" {
  *
  *@{
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * \brief Initialize WDT interface

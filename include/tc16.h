@@ -41,10 +41,6 @@
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef _TC16_H_INCLUDED
 #define _TC16_H_INCLUDED
 

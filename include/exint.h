@@ -43,10 +43,6 @@
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef _EXINT_H_INCLUDED
 #define _EXINT_H_INCLUDED
 

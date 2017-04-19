@@ -41,10 +41,6 @@
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef _USART_H_INCLUDED
 #define _USART_H_INCLUDED
 
