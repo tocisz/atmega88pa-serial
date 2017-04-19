@@ -13,7 +13,7 @@ extern volatile bool button_state_on;
 
 extern volatile uint16_t time;
 
-extern uint16_t capture[256];
+extern uint16_t capture_buffer[256];
 extern volatile uint8_t capture_write_ptr;
 
 #define BTN_CHG 0

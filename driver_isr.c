@@ -83,10 +83,10 @@ ISR(INT0_vect)
 	last_capture = time;
 	if ((capture_write_ptr%2) != (lvl?1:0)) {
 		// we want state high on even indices (so why it's reversed?)
-		capture[capture_write_ptr] = 0;
+		capture_buffer[capture_write_ptr] = 0;
 		capture_write_ptr = (capture_write_ptr+1)%256;
 	}
-	capture[capture_write_ptr] = timediff;
+	capture_buffer[capture_write_ptr] = timediff;
 	capture_write_ptr = (capture_write_ptr+1)%256;
 #endif
 }
