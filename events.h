@@ -2,6 +2,10 @@
 #include <stdbool.h>
 #include <util/atomic.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern volatile uint8_t EVENT0;
 
 // see driver_isr.c
@@ -47,3 +51,7 @@ static inline uint16_t read_time(void) {
   }
   return ret;
 }
+
+#ifdef __cplusplus
+}
+#endif
