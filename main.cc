@@ -31,15 +31,15 @@ class Capture {
 public:
 	uint8_t capture_read_ptr = 0;
 
-	uint8_t state = 0;
+	uint8_t state;
 
-	uint16_t s_short = 0;
-	uint16_t s_long = 0;
-	uint16_t s_cycle = 0;
+	uint16_t s_short;
+	uint16_t s_long;
+	uint16_t s_cycle;
 
-	uint16_t avg_short = 0;
-	uint16_t avg_long = 0;
-	uint16_t avg_cycle = 0;
+	uint16_t avg_short;
+	uint16_t avg_long;
+	uint16_t avg_cycle;
 
 	uint16_t cycle_1st_low;
 	uint16_t cycle_1st_high;
@@ -105,17 +105,6 @@ void Capture::process_capture() {
 }
 ///////////////////////////////////////////
 
-// bool on = false;
-bool print_on = false;
-
-uint16_t low_cnt = 0;
-uint16_t high_cnt = 0;
-
-static inline void reset_cnt() {
-	low_cnt = 0;
-	high_cnt = 0;
-}
-
 char print_buffer[6];
 void print_param(const char *name, uint16_t val) {
 	// use long to have value unsigned
@@ -143,6 +132,9 @@ static inline void print_pair(uint16_t a, uint16_t b) {
 }
 
 void capture_print(void) {
+	uint16_t low_cnt;
+	uint16_t high_cnt;
+
 	// even number > capture_write_ptr
 	uint8_t print_ptr = ((capture_write_ptr & ~1) + 2)%256;
 
