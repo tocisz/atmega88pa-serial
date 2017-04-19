@@ -121,4 +121,8 @@ static inline int8_t sysctrl_init()
 	return 0;
 }
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* _SYSCTRL_H_INCLUDED */
