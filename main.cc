@@ -74,7 +74,7 @@ void Capture::init_capture() {
 
 void Capture::process_capture() {
 	while ((capture_write_ptr&~1) != (capture_read_ptr&~1)) {
-		if (state == 7) {
+		if (state == 9) {
 			capture_bit();
 		} else {
 			capture_init_sequence();
@@ -107,27 +107,41 @@ void emit_bit(uint8_t bit) {
 
 void Capture::capture_bit() {
 	uint16_t l_up, l_sum;
+	int16_t prv_bit_sequence_length;
+	bool terminate = false;
 	while ((capture_write_ptr&~1) != (capture_read_ptr&~1)) {
 		read_pair(l_up, l_sum, capture_read_ptr);
 
+		if (l_sum > 4*avg_cycle) {
+			// terminate for sure
+			terminate = true;
+			l_sum = avg_cycle + avg_cycle/8; // cut off rest
+		}
+
 		bit_sequence_high += l_up;
+		prv_bit_sequence_length = bit_sequence_length;
 		bit_sequence_length += l_sum;
 
-		if (bit_sequence_length > avg_cycle) {
+		if (bit_sequence_length > (int16_t)avg_cycle) {
 			uint16_t deviation;
 			uint16_t deviation_plus = bit_sequence_length - avg_cycle;
-			// go back to find best match
-			uint8_t try_idx = (capture_read_ptr-2)%256;
-			read_pair(l_up, l_sum, try_idx);
-			uint16_t deviation_minus = avg_cycle - (bit_sequence_length-l_sum);
+			uint16_t deviation_minus = avg_cycle - prv_bit_sequence_length;
 			if (deviation_minus < deviation_plus) { // go back one pair
 				putchar('-');
-				capture_read_ptr = try_idx;
+				capture_read_ptr = (capture_read_ptr-2)%256;
 				deviation = deviation_minus;
 				bit_sequence_high -= l_up;
+				terminate = false;
 			} else {
 				putchar('+');
 				deviation = deviation_plus;
+			}
+
+			if (terminate) {
+				emit_bit((bit_sequence_high > bit_threshold) ? 1 : 0);
+				puts("T\n");
+				init_capture();
+				return;
 			}
 
 			if (deviation > avg_cycle / 4) {
@@ -145,9 +159,9 @@ void Capture::capture_bit() {
 						bit_sequence_high = deviation;
 					}
 				} else {
-					putchar('\n');
+					puts("E\n");
 					init_capture();
-					break;
+					return;
 				}
 			} else {
 				emit_bit((bit_sequence_high > bit_threshold) ? 1 : 0);
@@ -168,12 +182,12 @@ void Capture::capture_init_sequence() {
 			cycle_1st_high = l_sum / 2; // 1/2 * (2/3 * 5/4 + 1/6);
 			cycle_1st_low = cycle_1st_high / 2; // 1/2 * (2/3 * 3/4);
 			state = 1;
-		} else if ((state == 1 || state == 2 || state == 5)
+		} else if ((state == 1 || state == 2 || state == 5 || state == 7)
 			&& (BETWEEN(250, l_up, 1000) && BETWEEN(cycle_1st_low, l_sum, cycle_1st_high))) {
 				s_short += l_up;
 				s_cycle += l_sum;
 				++state;
-		} else if ((state == 3 || state == 4 || state == 6)
+		} else if ((state == 3 || state == 4 || state == 6 || state == 8)
 			&& (BETWEEN(1000, l_up, 2000) && BETWEEN(cycle_1st_low, l_sum, cycle_1st_high))) {
 				s_long += l_up;
 				s_cycle += l_sum;
@@ -189,11 +203,11 @@ void Capture::capture_init_sequence() {
 
 		capture_read_ptr = (capture_read_ptr+2)%256;
 
-		if (state == 7) {
-			uint16_t avg_short = s_short / 3;
-			uint16_t avg_long = s_long / 3;
+		if (state == 9) {
+			uint16_t avg_short = s_short / 4;
+			uint16_t avg_long = s_long / 4;
 			bit_threshold = (avg_short + avg_long) / 2;
-			avg_cycle = s_cycle / 6;
+			avg_cycle = s_cycle / 8;
 			print_param("LO ", avg_short);
 			print_param("HI ", avg_long);
 			print_param("CY ", avg_cycle);
