@@ -113,7 +113,6 @@ void Capture::capture_bit() {
 		read_pair(l_up, l_sum, capture_read_ptr);
 
 		if (l_sum > 4*avg_cycle) {
-			// terminate for sure
 			terminate = true;
 			l_sum = avg_cycle + avg_cycle/8; // cut off rest
 		}
@@ -159,9 +158,25 @@ void Capture::capture_bit() {
 						bit_sequence_high = deviation;
 					}
 				} else {
-					puts("E\n");
-					init_capture();
-					return;
+					// TODO error correction
+					uint8_t err_limit = 3;
+					do {
+						emit_bit((bit_sequence_high > bit_threshold) ? 5 : 6);
+						bit_sequence_length -= avg_cycle;
+						if (bit_sequence_high > avg_cycle) {
+							bit_sequence_high -= avg_cycle;
+						} else {
+							bit_sequence_high = 0;
+						}
+						--err_limit;
+					} while ((err_limit > 0) && (bit_sequence_length > avg_cycle));
+					if (err_limit == 0) {
+						puts("E\n");
+						init_capture();
+						return;
+					} else {
+						// continue with next change
+					}
 				}
 			} else {
 				emit_bit((bit_sequence_high > bit_threshold) ? 1 : 0);
