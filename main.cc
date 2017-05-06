@@ -47,6 +47,7 @@ private:
 public: // XXX
 	int16_t bit_sequence_length;
 	uint16_t bit_sequence_high;
+	bool going_back_allowed;
 
 public:
 	Capture() {
@@ -98,6 +99,7 @@ void Capture::start_new_bit() {
 	//current_bit_start = capture_read_ptr;
 	bit_sequence_length = 0;
 	bit_sequence_high = 0;
+	going_back_allowed = false;
 }
 
 void emit_bit(uint8_t bit) {
@@ -127,7 +129,8 @@ void Capture::capture_bit() {
 			uint16_t deviation_minus = avg_cycle - prv_bit_sequence_length;
 			// what if bit_sequence_length > 2*avg_cycle ?
 			// we will use deviation_minus and go into infinite loop?
-			if (deviation_minus < deviation_plus) { // go back one pair
+			if (going_back_allowed
+					&& (deviation_minus < deviation_plus)) { // go back one pair
 				putchar('-');
 				capture_read_ptr = (capture_read_ptr-2)%256;
 				deviation = deviation_minus;
@@ -150,7 +153,7 @@ void Capture::capture_bit() {
 				start_new_bit();
 			} else {
 				// lengh is way too long
-				while (bit_sequence_length > 2*avg_cycle-avg_cycle/2) {
+				while (bit_sequence_length > (int16_t)(2*avg_cycle-avg_cycle/2)) {
 					emit_bit((bit_sequence_high > bit_threshold) ? 5 : 6);
 					bit_sequence_length -= avg_cycle;
 					if (bit_sequence_high > avg_cycle) {
@@ -161,7 +164,7 @@ void Capture::capture_bit() {
 				}
 				// 0.5*avg_cycle < bit_sequence_length < 1.5*avg_cycle
 
-				if (bit_sequence_length > avg_cycle) {
+				if (bit_sequence_length > (int16_t)avg_cycle) {
 					deviation = bit_sequence_length - avg_cycle;
 				} else {
 					deviation = avg_cycle - bit_sequence_length;
@@ -175,18 +178,20 @@ void Capture::capture_bit() {
 					// try to correct timing
 					emit_bit((bit_sequence_high > bit_threshold) ? 3 : 2);
 					// current_bit_start = capture_read_ptr;
-					if (bit_sequence_length < avg_cycle) { // cycle too short
-						bit_sequence_length = deviation;
+					if (bit_sequence_length < (int16_t)avg_cycle) { // cycle too short
+						bit_sequence_length = -deviation;
 						bit_sequence_high = 0;
 					} else { // cycle too long
 						// yes, we start from negative value to correct cycle boundary
-						bit_sequence_length = -deviation;
+						bit_sequence_length = deviation;
 						// and assume that high state was delayed
 						bit_sequence_high = deviation;
 					}
 				}
 			}
 
+		} else {
+			going_back_allowed = true;
 		}
 
 		capture_read_ptr = (capture_read_ptr+2)%256;
