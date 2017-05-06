@@ -43,7 +43,7 @@ private:
 	uint16_t cycle_1st_low;
 	uint16_t cycle_1st_high;
 
-	uint8_t current_bit_start;
+	//uint8_t current_bit_start;
 public: // XXX
 	int16_t bit_sequence_length;
 	uint16_t bit_sequence_high;
@@ -95,7 +95,7 @@ inline void read_pair(uint16_t &l_up, uint16_t &l_sum, uint8_t i) {
 }
 
 void Capture::start_new_bit() {
-	current_bit_start = capture_read_ptr;
+	//current_bit_start = capture_read_ptr;
 	bit_sequence_length = 0;
 	bit_sequence_high = 0;
 }
@@ -125,6 +125,8 @@ void Capture::capture_bit() {
 			uint16_t deviation;
 			uint16_t deviation_plus = bit_sequence_length - avg_cycle;
 			uint16_t deviation_minus = avg_cycle - prv_bit_sequence_length;
+			// what if bit_sequence_length > 2*avg_cycle ?
+			// we will use deviation_minus and go into infinite loop?
 			if (deviation_minus < deviation_plus) { // go back one pair
 				putchar('-');
 				capture_read_ptr = (capture_read_ptr-2)%256;
@@ -143,12 +145,37 @@ void Capture::capture_bit() {
 				return;
 			}
 
-			if (deviation > avg_cycle / 4) {
-				if (deviation < avg_cycle / 2) {
+			if (deviation < avg_cycle / 8) {
+				emit_bit((bit_sequence_high > bit_threshold) ? 1 : 0);
+				start_new_bit();
+			} else {
+				// lengh is way too long
+				while (bit_sequence_length > 2*avg_cycle-avg_cycle/2) {
+					emit_bit((bit_sequence_high > bit_threshold) ? 5 : 6);
+					bit_sequence_length -= avg_cycle;
+					if (bit_sequence_high > avg_cycle) {
+						bit_sequence_high -= avg_cycle;
+					} else {
+						bit_sequence_high = 0;
+					}
+				}
+				// 0.5*avg_cycle < bit_sequence_length < 1.5*avg_cycle
+
+				if (bit_sequence_length > avg_cycle) {
+					deviation = bit_sequence_length - avg_cycle;
+				} else {
+					deviation = avg_cycle - bit_sequence_length;
+				}
+
+				if (deviation < avg_cycle / 8) {
+					// we are back on track
+					emit_bit((bit_sequence_high > bit_threshold) ? 1 : 0);
+					start_new_bit();
+				} else {
 					// try to correct timing
 					emit_bit((bit_sequence_high > bit_threshold) ? 3 : 2);
-					current_bit_start = capture_read_ptr;
-					if (deviation_minus < deviation_plus) { // cycle too short
+					// current_bit_start = capture_read_ptr;
+					if (bit_sequence_length < avg_cycle) { // cycle too short
 						bit_sequence_length = deviation;
 						bit_sequence_high = 0;
 					} else { // cycle too long
@@ -157,30 +184,7 @@ void Capture::capture_bit() {
 						// and assume that high state was delayed
 						bit_sequence_high = deviation;
 					}
-				} else {
-					// TODO error correction
-					uint8_t err_limit = 3;
-					do {
-						emit_bit((bit_sequence_high > bit_threshold) ? 5 : 6);
-						bit_sequence_length -= avg_cycle;
-						if (bit_sequence_high > avg_cycle) {
-							bit_sequence_high -= avg_cycle;
-						} else {
-							bit_sequence_high = 0;
-						}
-						--err_limit;
-					} while ((err_limit > 0) && (bit_sequence_length > avg_cycle));
-					if (err_limit == 0) {
-						puts("E\n");
-						init_capture();
-						return;
-					} else {
-						// continue with next change
-					}
 				}
-			} else {
-				emit_bit((bit_sequence_high > bit_threshold) ? 1 : 0);
-				start_new_bit();
 			}
 
 		}
@@ -197,12 +201,12 @@ void Capture::capture_init_sequence() {
 			cycle_1st_high = l_sum / 2; // 1/2 * (2/3 * 5/4 + 1/6);
 			cycle_1st_low = cycle_1st_high / 2; // 1/2 * (2/3 * 3/4);
 			state = 1;
-		} else if ((state == 1 || state == 2 || state == 5 || state == 7)
+		} else if ((state == 1 || state == 2 || state == 5 || state == 7) // ((1<<(state-1))&0b01010011)
 			&& (BETWEEN(250, l_up, 1000) && BETWEEN(cycle_1st_low, l_sum, cycle_1st_high))) {
 				s_short += l_up;
 				s_cycle += l_sum;
 				++state;
-		} else if ((state == 3 || state == 4 || state == 6 || state == 8)
+		} else if ((state == 3 || state == 4 || state == 6 || state == 8) //((1<<(state-1))&~0b01010011)
 			&& (BETWEEN(1000, l_up, 2000) && BETWEEN(cycle_1st_low, l_sum, cycle_1st_high))) {
 				s_long += l_up;
 				s_cycle += l_sum;
