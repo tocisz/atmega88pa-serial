@@ -43,6 +43,8 @@ src/driver_init.o \
 src/usart.o \
 usart_util.o \
 events.o \
+print.o \
+capture.o \
 src/protected_io.o
 
 OBJS_AS_ARGS +=  \
@@ -58,6 +60,8 @@ OBJS_AS_ARGS +=  \
 "src/usart.o" \
 "usart_util.o" \
 "events.o" \
+"print.o" \
+"capture.o" \
 "src/protected_io.o"
 
 # List the dependency files
@@ -68,6 +72,8 @@ DEPS_AS_ARGS +=  \
 "src/exint.d" \
 "src/tc8.d" \
 "main.d" \
+"print.d" \
+"capture.d" \
 "src/protected_io.d" \
 "src/usart.d" \
 "src/driver_init.d" \
@@ -100,7 +106,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 -Wl,-Map="$(OUTPUT_FILE_NAME).map" -Wl,--gc-sections \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
 -L"../gcc/dev/atmega88/avr4"  \
--l:libatmega88.a 
+-l:libatmega88.a
 	@echo Finished building target: $@
 
 	"avr-objcopy" -O binary "$(OUTPUT_FILE_NAME).elf" "$(OUTPUT_FILE_NAME).bin"
