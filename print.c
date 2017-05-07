@@ -10,7 +10,7 @@ void print_param(const char *name, uint16_t val) {
 	ltoa(val, print_buffer, 10);
 	fputs(name, stdout);
 	puts(print_buffer);
-	while (out_buf_length() > 0); //wait
+	while (!out_buffer_is_empty()); //wait
 }
 
 void print_align(uint16_t val) {

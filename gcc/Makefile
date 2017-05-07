@@ -42,6 +42,7 @@ atmel_start.o \
 src/driver_init.o \
 src/usart.o \
 usart_util.o \
+usart_util0.o \
 events.o \
 print.o \
 capture.o \
@@ -59,6 +60,7 @@ OBJS_AS_ARGS +=  \
 "src/driver_init.o" \
 "src/usart.o" \
 "usart_util.o" \
+"usart_util0.o" \
 "events.o" \
 "print.o" \
 "capture.o" \
@@ -77,6 +79,8 @@ DEPS_AS_ARGS +=  \
 "src/protected_io.d" \
 "src/usart.d" \
 "src/driver_init.d" \
+"usart_util.d" \
+"usart_util0.d" \
 "src/ccp.d" \
 "driver_isr.d" \
 "atmel_start.d" \
