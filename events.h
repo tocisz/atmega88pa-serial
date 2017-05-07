@@ -18,6 +18,7 @@ extern volatile uint8_t capture_write_ptr;
 
 #define BTN_CHG 0
 #define NEW_512HZ_CYCLE 1
+#define CAPTURE_FINISHED 2
 
 static inline bool is_button_change(void) {
   return EVENT0 & (1 << BTN_CHG);
@@ -43,6 +44,19 @@ static inline void set_new_512hz_cycle(void) {
 static inline void clear_new_512hz_cycle(void) {
     EVENT0 &= ~(1 << NEW_512HZ_CYCLE);
 }
+
+static inline bool is_capture_finished(void) {
+  return EVENT0 & (1 << CAPTURE_FINISHED);
+}
+
+static inline void set_capture_finished(void) {
+  EVENT0 |= (1 << CAPTURE_FINISHED);
+}
+
+static inline void clear_capture_finished(void) {
+    EVENT0 &= ~(1 << CAPTURE_FINISHED);
+}
+
 
 static inline uint16_t read_time(void) {
   uint16_t ret;

@@ -45,9 +45,10 @@ void Capture::start_new_bit() {
 	going_back_allowed = false;
 }
 
-void emit_bit(uint8_t bit) {
-	putchar('0'+bit);
-	while (out_buf_length() > 0); //wait
+void Capture::emit_bit(uint8_t bit) {
+  bit_buffer.write_bit(bit%2);
+	// putchar('0'+bit);
+	// while (!out_buffer_is_empty()); //wait
 }
 
 void Capture::capture_bit() {
@@ -74,19 +75,18 @@ void Capture::capture_bit() {
 		// we will use deviation_minus and go into infinite loop?
 		if (going_back_allowed
 				&& (deviation_minus < deviation_plus)) { // go back one pair
-			putchar('-');
 			capture_read_ptr = (capture_read_ptr-2)%256;
 			deviation = deviation_minus;
 			bit_sequence_high -= l_up;
 			terminate = false;
 		} else {
-			putchar('+');
 			deviation = deviation_plus;
 		}
 
 		if (terminate) {
 			emit_bit((bit_sequence_high > bit_threshold) ? 1 : 0);
-			puts("T\n");
+      bit_buffer.flush();
+      set_capture_finished();
 			init_capture();
 			return;
 		}
@@ -173,9 +173,9 @@ void Capture::capture_init_sequence() {
 		uint16_t avg_long = s_long / 4;
 		bit_threshold = (avg_short + avg_long) / 2;
 		avg_cycle = s_cycle / 8;
-		print_param("LO ", avg_short);
-		print_param("HI ", avg_long);
-		print_param("CY ", avg_cycle);
+		// print_param("LO ", avg_short);
+		// print_param("HI ", avg_long);
+		// print_param("CY ", avg_cycle);
 		start_new_bit();
 		return;
 	}

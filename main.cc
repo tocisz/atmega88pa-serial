@@ -23,6 +23,7 @@ static inline void animate_glow(void) {
 #include "usart_util.h"
 #include "print.h"
 #include "capture.h"
+#include "byte_buffer.h"
 
 int main(void)
 {
@@ -32,7 +33,8 @@ int main(void)
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cpu_irq_enable();
 
-	Capture capture;
+	SmallByteBuffer captured_bytes;
+	Capture capture(capture_buffer, capture_write_ptr, captured_bytes);
 
 	/* Replace with your application code */
 	for(;;) {
@@ -49,7 +51,7 @@ int main(void)
 			}
 
 			NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
-				while (in_buf_length() > 0) {
+				while (!in_buffer_is_empty()) {
 					char c = getchar();
 					if (c == 'p') {
 						capture_print();
@@ -70,8 +72,18 @@ int main(void)
 			}
 
 			if ((capture_write_ptr&~1) != (capture.capture_read_ptr&~1)) {
-			NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
+				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					capture.process_capture();
+
+					if (is_capture_finished()) {
+						clear_capture_finished();
+						puts("RADIO:");
+						while (!captured_bytes.is_empty()) {
+							while(!out_buffer_is_empty());
+							putchar(captured_bytes.read_byte());
+						}
+						putchar('\n');
+					}
 				}
 			}
 
