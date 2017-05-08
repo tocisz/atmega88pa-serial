@@ -64,6 +64,8 @@ extern "C" {
 extern "C" {
 #endif
 
+int8_t USART_init();
+
 /**
  * \brief Check if USART transmitt buffer is empty
  */
