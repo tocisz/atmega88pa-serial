@@ -39,6 +39,7 @@ src/usart.o \
 src/wdt.o \
 atmel_start.o \
 src/ccp.o \
+src/spi.o \
 src/protected_io.o \
 events.o \
 usart_util.o \
@@ -53,6 +54,7 @@ OBJS_AS_ARGS +=  \
 "src/wdt.o" \
 "atmel_start.o" \
 "src/ccp.o" \
+"src/spi.o" \
 "src/protected_io.o" \
 "events.o" \
 "usart_util.o" \
@@ -70,7 +72,10 @@ DEPS_AS_ARGS +=  \
 "src/wdt.d" \
 "atmel_start.d" \
 "src/ccp.d" \
+"src/spi.d" \
 "src/protected_io.d" \
+"usart_util.d" \
+"events.d" \
 "main.d"
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
