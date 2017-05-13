@@ -58,9 +58,6 @@ void print_time(uint16_t val) {
 inline static void nokia_start() {
 	N_SCK_set_dir(PORT_DIR_OUT);
 	N_MOSI_set_dir(PORT_DIR_OUT);
-	// RST is set LOW in system_init()
-	// N_RST_set_level(false);
-	// _delay_ms(100);
 	N_SCE_set_level(false);
 }
 
@@ -97,6 +94,9 @@ void nokia_clear() {
 
 inline static void nokia_init(uint8_t bias, uint8_t contrast) {
 	nokia_start();
+	// RST is set LOW in system_init()
+	// N_RST_set_level(false);
+	// _delay_ms(100);
 	N_RST_set_level(true);
 	nokia_control();
 	nokia_send(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
