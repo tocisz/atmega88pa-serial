@@ -214,22 +214,42 @@ pads:
     mode: Digital output
     user_label: HEART
     configuration: null
-  PB3:
+  N_D_C:
+    name: PB1
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB1
+    mode: Digital output
+    user_label: N_D_C
+    configuration: null
+  N_RST:
+    name: PB2
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB2
+    mode: Digital output
+    user_label: N_RST
+    configuration: null
+  N_MOSI:
     name: PB3
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB3
     mode: Digital output
-    user_label: PB3
+    user_label: N_MOSI
     configuration: null
-  PB5:
+  N_SCE:
+    name: PB4
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB4
+    mode: Digital output
+    user_label: N_SCE
+    configuration:
+      pad_initial_level: High
+  N_SCK:
     name: PB5
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB5
     mode: Digital output
-    user_label: PB5
+    user_label: N_SCK
     configuration: null
   BUTTON:
     name: PC5
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PC5
     mode: Digital input
     user_label: BUTTON
-    configuration: null
+    configuration:
+      pad_pull_config: Pull-up
 toolchain_options: []
