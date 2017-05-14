@@ -27,7 +27,7 @@ void NokiaTextDisplay::print(char c) {
 	_print(c);
 }
 
-void NokiaTextDisplay::print_str(const char *s) {
+void NokiaTextDisplay::print(const char *s) {
   char c;
 	data();
 	while ((c = *(s++)) != 0) {

@@ -2,7 +2,7 @@
 #define NOKIA_DISPLAY_H
 
 #include <atmel_start.h>
-
+#include <string.h>
 #include <avr/pgmspace.h>
 extern const uint8_t FONT[] PROGMEM;
 
@@ -31,6 +31,8 @@ extern const uint8_t FONT[] PROGMEM;
 
 class NokiaTextDisplay {
 public:
+  NokiaTextDisplay() : x(0), y(0) {}
+
   void start() {
     N_SCK_set_dir(PORT_DIR_OUT);
   	N_MOSI_set_dir(PORT_DIR_OUT);
@@ -51,13 +53,16 @@ public:
 
   void send(uint8_t b) {
     SPDR = b;
-  	while(!(SPSR & (1<<SPIF)));
+    while(!(SPSR & (1<<SPIF)));
   }
 
-  void goto_y_x(uint8_t y, uint8_t x) {
+  void goto_y_x(uint8_t _y, uint8_t _x) {
     control();
-  	send(PCD8544_SETYADDR | y);
-  	send(PCD8544_SETXADDR | x);
+    send(PCD8544_SETYADDR | _y);
+    send(PCD8544_SETXADDR | _x*6);
+
+    y = _y;
+    x = _x;
   }
 
   void clear() {
@@ -66,19 +71,59 @@ public:
   	for (uint16_t i = 0; i < LCDWIDTH*LCDHEIGHT/8; ++i) {
   		send(0);
   	}
+
+    memset(buffer, ' ', 14*8);
+  }
+
+  uint8_t get_x() {
+    return x;
+  }
+
+  uint8_t get_y() {
+    return y;
   }
 
   void init(uint8_t bias, uint8_t contrast);
   void print(char c);
-  void print_str(const char *s);
+  void print(const char *s);
 
 private:
   void _print(char c) {
-    const uint8_t *ptr = FONT + (c - 32)*6;
-  	for (uint8_t i = 0; i < 6; ++i) {
-  		send(pgm_read_byte(ptr++));
-  	}
+    if (c == '\r') {
+      goto_y_x(y, 0);
+
+    } else if ((c == '\n') && (y != 5)) {
+      goto_y_x(y+1, 0);
+
+    } else if ((c == '\n') && (y == 5)) {
+      goto_y_x(0, 0);
+
+    } else if ((c >= 32) && (c <= 128)) {
+
+      const uint8_t *ptr = FONT + (c - 32)*6;
+      for (uint8_t i = 0; i < 6; ++i) {
+        send(pgm_read_byte(ptr++));
+      }
+
+      x++;
+      if (x == 14) {
+        x = 0;
+        y++;
+      }
+
+      if (y == 6) {
+        goto_y_x(0, 0);
+      }
+
+    }
   }
+
+  // current position
+  uint8_t x, y;
+
+  // current buffer
+  char buffer[14*8];
+
 };
 
 #endif

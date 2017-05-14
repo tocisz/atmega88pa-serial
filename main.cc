@@ -42,16 +42,12 @@ int main(void)
 
 	display.init(4, 60);
 
-	display.goto_y_x(2, 6);
-	display.print_str("Hello world!");
-	display.goto_y_x(4, LCDWIDTH/2 - 6);
-	display.print_str(":)");
+	display.goto_y_x(2, 1);
+	display.print("Hello world!");
+	display.goto_y_x(4, 6);
+	display.print(":)");
 
-	// display.data();
-	// for (uint16_t i = 0; i < LCDWIDTH*LCDHEIGHT/8; ++i) {
-	// 	display.send(pgm_read_byte(FONT+i));
-	// }
-	display.stop();
+	display.goto_y_x(0, 0);
 
 	/* Replace with your application code */
 	for(;;) {
@@ -81,7 +77,9 @@ int main(void)
 			}
 
 			while (in_buf_length() > 0) {
-				putchar(getchar());
+				char c = getchar();
+				putchar(c);
+				display.print(c);
 			}
 		}
 
