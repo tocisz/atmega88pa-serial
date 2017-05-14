@@ -44,7 +44,7 @@ int main(void)
 
 	display.goto_y_x(2, 6);
 	display.print_str("Hello world!");
-	display.goto(4, LCDWIDTH/2 - 6);
+	display.goto_y_x(4, LCDWIDTH/2 - 6);
 	display.print_str(":)");
 
 	// display.data();
