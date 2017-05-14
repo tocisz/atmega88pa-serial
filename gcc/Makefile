@@ -43,6 +43,7 @@ src/spi.o \
 src/protected_io.o \
 events.o \
 usart_util.o \
+nokia_display.o \
 main.o
 
 OBJS_AS_ARGS +=  \
@@ -58,6 +59,7 @@ OBJS_AS_ARGS +=  \
 "src/protected_io.o" \
 "events.o" \
 "usart_util.o" \
+"nokia_display.o" \
 "main.o"
 
 # List the dependency files
@@ -76,6 +78,7 @@ DEPS_AS_ARGS +=  \
 "src/protected_io.d" \
 "usart_util.d" \
 "events.d" \
+"nokia_display.d" \
 "main.d"
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
