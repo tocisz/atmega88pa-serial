@@ -43,6 +43,7 @@ src/spi.o \
 src/protected_io.o \
 events.o \
 usart_util.o \
+nokia_display.o \
 main.o
 
 OBJS_AS_ARGS +=  \
@@ -58,6 +59,7 @@ OBJS_AS_ARGS +=  \
 "src/protected_io.o" \
 "events.o" \
 "usart_util.o" \
+"nokia_display.o" \
 "main.o"
 
 # List the dependency files
@@ -76,6 +78,7 @@ DEPS_AS_ARGS +=  \
 "src/protected_io.d" \
 "usart_util.d" \
 "events.d" \
+"nokia_display.d" \
 "main.d"
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
@@ -85,6 +88,7 @@ OUTPUT_FILE_PATH +=$(OUTPUT_FILE_NAME).elf
 OUTPUT_FILE_PATH_AS_ARGS +=$(OUTPUT_FILE_NAME).elf
 
 vpath %.c ../
+vpath %.cc ../
 vpath %.s ../
 vpath %.S ../
 
@@ -120,6 +124,17 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 	@echo Building file: $<
 	@echo AVR/GNU C Compiler
 	$(QUOTE)avr-gcc$(QUOTE) -x c -DF_CPU=1000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
+-mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
+    -D__mega88__ \
+-I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \
+-MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
+
+	@echo Finished building: $<
+
+%.o: %.cc
+	@echo Building file: $<
+	@echo AVR/GNU C++ Compiler
+	$(QUOTE)avr-g++$(QUOTE) -x c++ -DF_CPU=8000000 -DDEBUG -Os -ffunction-sections -g3 -Wall -c -std=c++11 \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
     -D__mega88__ \
 -I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \
