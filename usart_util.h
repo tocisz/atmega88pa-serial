@@ -1,4 +1,11 @@
+#ifndef USART_UTIL_H
+#define USART_UTIL_H
+
 #include <atmel_start.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define BUFLEN 8
 
@@ -27,3 +34,9 @@ static inline void USART_enable_udre() {
 static inline void USART_disable_udre() {
   UCSR0B &= ~(1 << UDRIE0);
 }
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
