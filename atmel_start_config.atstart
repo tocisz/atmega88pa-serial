@@ -22,14 +22,10 @@ drivers:
       cpu_clock_source: CLKcpu
       enable_async_input: false
       enable_clkadc: false
-      enable_clkadc_enable: false
       enable_clkasy: false
-      enable_clkasy_enable: false
       enable_clkcpu: true
       enable_clkio: true
-      enable_clkio_enable: true
       enable_clkptc: false
-      enable_clkptc_enable: false
       enable_core_clock: true
       enable_input: true
       input_speed: 8000000
@@ -81,6 +77,42 @@ drivers:
     variant: null
     clocks:
       domain_group: null
+  SPI_0:
+    user_label: SPI_0
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::SPI::driver_config_definition::Normal.SPI.speed::Drivers:SPI.Init:'
+    functionality: SPI
+    api: 'Drivers:SPI_Init:'
+    configuration:
+      spi_cpha: Sample on leading edge
+      spi_cpol: SCK is low when idle
+      spi_dord: MSB transmitted first
+      spi_mstr: Master mode
+      spi_spe: true
+      spi_spie: false
+      spi_spr: fosc/4
+    optional_signals:
+    - identifier: SPI_0:MOSI
+      pad: PB3
+      mode: Enabled
+      configuration: null
+      definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::optional_signal_definition::SPI.MOSI
+      name: SPI/MOSI
+      label: MOSI
+    - identifier: SPI_0:SCK
+      pad: PB5
+      mode: Enabled
+      configuration: null
+      definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::optional_signal_definition::SPI.SCK
+      name: SPI/SCK
+      label: SCK
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: SPI
+          input: CLKio
+        configuration:
+          spi_clock_source: CLKio
   TIMER_0:
     user_label: TIMER_0
     definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::TC0::driver_config_definition::Mode.0.Normal::Drivers:TC8.Init:'
@@ -211,11 +243,42 @@ pads:
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PC4
     mode: Analog
     user_label: Analog
+  N_D_C:
+    name: PB1
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB1
+    mode: Digital output
+    user_label: N_D_C
+    configuration: null
+  N_RST:
+    name: PB2
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB2
+    mode: Digital output
+    user_label: N_RST
+    configuration: null
+  N_MOSI:
+    name: PB3
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB3
+    mode: Digital output
+    user_label: N_MOSI
+    configuration: null
+  N_SCE:
+    name: PB4
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB4
+    mode: Digital output
+    user_label: N_SCE
+    configuration:
+      pad_initial_level: High
+  N_SCK:
+    name: PB5
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PB5
+    mode: Digital output
+    user_label: N_SCK
     configuration: null
   BUTTON:
     name: PC5
     definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega88-20PU::pad::PC5
     mode: Digital input
     user_label: BUTTON
-    configuration: null
+    configuration:
+      pad_pull_config: Pull-up
 toolchain_options: []

@@ -13,6 +13,15 @@
 
 // </h>
 
+// <h> SPI Clock Settings
+// <y> SPI Clock source
+// <CLKio"> CLKio
+// <i> This defines the clock source for the SPI module
+// <id> spi_clock_source
+#define CONF_SPI_SRC CLKio
+
+// </h>
+
 // <h> TC0 Clock Settings
 // <y> TC0 Clock source
 // <CLKio"> CLKio

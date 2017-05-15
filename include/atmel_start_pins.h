@@ -80,10 +80,10 @@ static inline bool HEART_get_level()
  *
  * \param[in] pull_mode Pin pull mode
  */
-static inline void Analog_set_pull_mode(const enum port_pull_mode pull_mode)
-{
-	PORTC_set_pin_pull_mode(PORTC4, pull_mode);
-}
+ static inline void Analog_set_pull_mode(const enum port_pull_mode pull_mode)
+ {
+ 	PORTC_set_pin_pull_mode(PORTC4, pull_mode);
+ }
 
 /**
  * \brief Set Analog data direction
@@ -96,42 +96,352 @@ static inline void Analog_set_pull_mode(const enum port_pull_mode pull_mode)
  *                      PORT_DIR_OFF = Disables the pin
  *                      (low power state)
  */
-static inline void Analog_set_dir(const enum port_dir dir)
+ static inline void Analog_set_dir(const enum port_dir dir)
+ {
+ 	PORTC_set_pin_dir(PORTC4, dir);
+ }
+
+ /**
+  * \brief Set Analog level
+  *
+  * Sets output level on a pin
+  *
+  * \param[in] level true  = Pin level set to "high" state
+  *                  false = Pin level set to "low" state
+  */
+ static inline void Analog_set_level(const bool level)
+ {
+ 	PORTC_set_pin_level(PORTC4, level);
+ }
+
+ /**
+  * \brief Toggle output level on Analog
+  *
+  * Toggle the pin level
+  */
+ static inline void Analog_toggle_level()
+ {
+ 	PORTC_toggle_pin_level(PORTC4);
+ }
+
+ /**
+  * \brief Get level on Analog
+  *
+  * Reads the level on a pin
+  */
+ static inline bool Analog_get_level()
+ {
+ 	return PORTC_get_pin_level(PORTC4);
+ }
+
+ /**
+  * \brief Set N_D_C pull mode
+  *
+  * Configure pin to pull up, down or disable pull mode, supported pull
+  * modes are defined by device used
+  *
+  * \param[in] pull_mode Pin pull mode
+  */
+static inline void N_D_C_set_pull_mode(const enum port_pull_mode pull_mode)
 {
-	PORTC_set_pin_dir(PORTC4, dir);
+	PORTB_set_pin_pull_mode(PORTB1, pull_mode);
 }
 
 /**
- * \brief Set Analog level
+ * \brief Set N_D_C data direction
+ *
+ * Select if the pin data direction is input, output or disabled.
+ * If disabled state is not possible, this function throws an assert.
+ *
+ * \param[in] direction PORT_DIR_IN  = Data direction in
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void N_D_C_set_dir(const enum port_dir dir)
+{
+	PORTB_set_pin_dir(PORTB1, dir);
+}
+
+/**
+ * \brief Set N_D_C level
  *
  * Sets output level on a pin
  *
  * \param[in] level true  = Pin level set to "high" state
  *                  false = Pin level set to "low" state
  */
-static inline void Analog_set_level(const bool level)
+static inline void N_D_C_set_level(const bool level)
 {
-	PORTC_set_pin_level(PORTC4, level);
+	PORTB_set_pin_level(PORTB1, level);
 }
 
 /**
- * \brief Toggle output level on Analog
+ * \brief Toggle output level on N_D_C
  *
  * Toggle the pin level
  */
-static inline void Analog_toggle_level()
+static inline void N_D_C_toggle_level()
 {
-	PORTC_toggle_pin_level(PORTC4);
+	PORTB_toggle_pin_level(PORTB1);
 }
 
 /**
- * \brief Get level on Analog
+ * \brief Get level on N_D_C
  *
  * Reads the level on a pin
  */
-static inline bool Analog_get_level()
+static inline bool N_D_C_get_level()
 {
-	return PORTC_get_pin_level(PORTC4);
+	return PORTB_get_pin_level(PORTB1);
+}
+
+/**
+ * \brief Set N_RST pull mode
+ *
+ * Configure pin to pull up, down or disable pull mode, supported pull
+ * modes are defined by device used
+ *
+ * \param[in] pull_mode Pin pull mode
+ */
+static inline void N_RST_set_pull_mode(const enum port_pull_mode pull_mode)
+{
+	PORTB_set_pin_pull_mode(PORTB2, pull_mode);
+}
+
+/**
+ * \brief Set N_RST data direction
+ *
+ * Select if the pin data direction is input, output or disabled.
+ * If disabled state is not possible, this function throws an assert.
+ *
+ * \param[in] direction PORT_DIR_IN  = Data direction in
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void N_RST_set_dir(const enum port_dir dir)
+{
+	PORTB_set_pin_dir(PORTB2, dir);
+}
+
+/**
+ * \brief Set N_RST level
+ *
+ * Sets output level on a pin
+ *
+ * \param[in] level true  = Pin level set to "high" state
+ *                  false = Pin level set to "low" state
+ */
+static inline void N_RST_set_level(const bool level)
+{
+	PORTB_set_pin_level(PORTB2, level);
+}
+
+/**
+ * \brief Toggle output level on N_RST
+ *
+ * Toggle the pin level
+ */
+static inline void N_RST_toggle_level()
+{
+	PORTB_toggle_pin_level(PORTB2);
+}
+
+/**
+ * \brief Get level on N_RST
+ *
+ * Reads the level on a pin
+ */
+static inline bool N_RST_get_level()
+{
+	return PORTB_get_pin_level(PORTB2);
+}
+
+/**
+ * \brief Set N_MOSI pull mode
+ *
+ * Configure pin to pull up, down or disable pull mode, supported pull
+ * modes are defined by device used
+ *
+ * \param[in] pull_mode Pin pull mode
+ */
+static inline void N_MOSI_set_pull_mode(const enum port_pull_mode pull_mode)
+{
+	PORTB_set_pin_pull_mode(PORTB3, pull_mode);
+}
+
+/**
+ * \brief Set N_MOSI data direction
+ *
+ * Select if the pin data direction is input, output or disabled.
+ * If disabled state is not possible, this function throws an assert.
+ *
+ * \param[in] direction PORT_DIR_IN  = Data direction in
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void N_MOSI_set_dir(const enum port_dir dir)
+{
+	PORTB_set_pin_dir(PORTB3, dir);
+}
+
+/**
+ * \brief Set N_MOSI level
+ *
+ * Sets output level on a pin
+ *
+ * \param[in] level true  = Pin level set to "high" state
+ *                  false = Pin level set to "low" state
+ */
+static inline void N_MOSI_set_level(const bool level)
+{
+	PORTB_set_pin_level(PORTB3, level);
+}
+
+/**
+ * \brief Toggle output level on N_MOSI
+ *
+ * Toggle the pin level
+ */
+static inline void N_MOSI_toggle_level()
+{
+	PORTB_toggle_pin_level(PORTB3);
+}
+
+/**
+ * \brief Get level on N_MOSI
+ *
+ * Reads the level on a pin
+ */
+static inline bool N_MOSI_get_level()
+{
+	return PORTB_get_pin_level(PORTB3);
+}
+
+/**
+ * \brief Set N_SCE pull mode
+ *
+ * Configure pin to pull up, down or disable pull mode, supported pull
+ * modes are defined by device used
+ *
+ * \param[in] pull_mode Pin pull mode
+ */
+static inline void N_SCE_set_pull_mode(const enum port_pull_mode pull_mode)
+{
+	PORTB_set_pin_pull_mode(PORTB4, pull_mode);
+}
+
+/**
+ * \brief Set N_SCE data direction
+ *
+ * Select if the pin data direction is input, output or disabled.
+ * If disabled state is not possible, this function throws an assert.
+ *
+ * \param[in] direction PORT_DIR_IN  = Data direction in
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void N_SCE_set_dir(const enum port_dir dir)
+{
+	PORTB_set_pin_dir(PORTB4, dir);
+}
+
+/**
+ * \brief Set N_SCE level
+ *
+ * Sets output level on a pin
+ *
+ * \param[in] level true  = Pin level set to "high" state
+ *                  false = Pin level set to "low" state
+ */
+static inline void N_SCE_set_level(const bool level)
+{
+	PORTB_set_pin_level(PORTB4, level);
+}
+
+/**
+ * \brief Toggle output level on N_SCE
+ *
+ * Toggle the pin level
+ */
+static inline void N_SCE_toggle_level()
+{
+	PORTB_toggle_pin_level(PORTB4);
+}
+
+/**
+ * \brief Get level on N_SCE
+ *
+ * Reads the level on a pin
+ */
+static inline bool N_SCE_get_level()
+{
+	return PORTB_get_pin_level(PORTB4);
+}
+
+/**
+ * \brief Set N_SCK pull mode
+ *
+ * Configure pin to pull up, down or disable pull mode, supported pull
+ * modes are defined by device used
+ *
+ * \param[in] pull_mode Pin pull mode
+ */
+static inline void N_SCK_set_pull_mode(const enum port_pull_mode pull_mode)
+{
+	PORTB_set_pin_pull_mode(PORTB5, pull_mode);
+}
+
+/**
+ * \brief Set N_SCK data direction
+ *
+ * Select if the pin data direction is input, output or disabled.
+ * If disabled state is not possible, this function throws an assert.
+ *
+ * \param[in] direction PORT_DIR_IN  = Data direction in
+ *                      PORT_DIR_OUT = Data direction out
+ *                      PORT_DIR_OFF = Disables the pin
+ *                      (low power state)
+ */
+static inline void N_SCK_set_dir(const enum port_dir dir)
+{
+	PORTB_set_pin_dir(PORTB5, dir);
+}
+
+/**
+ * \brief Set N_SCK level
+ *
+ * Sets output level on a pin
+ *
+ * \param[in] level true  = Pin level set to "high" state
+ *                  false = Pin level set to "low" state
+ */
+static inline void N_SCK_set_level(const bool level)
+{
+	PORTB_set_pin_level(PORTB5, level);
+}
+
+/**
+ * \brief Toggle output level on N_SCK
+ *
+ * Toggle the pin level
+ */
+static inline void N_SCK_toggle_level()
+{
+	PORTB_toggle_pin_level(PORTB5);
+}
+
+/**
+ * \brief Get level on N_SCK
+ *
+ * Reads the level on a pin
+ */
+static inline bool N_SCK_get_level()
+{
+	return PORTB_get_pin_level(PORTB5);
 }
 
 /**
