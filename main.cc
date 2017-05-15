@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 /////////////////// GOLW //////////////////
+#ifdef GLOW
 uint8_t power = 0;
 int8_t dir = 1;
 
@@ -15,19 +16,14 @@ static inline void animate_glow(void) {
 		dir = -dir;
 	}
 }
+#endif
 ///////////////////////////////////////////
 
 #include "events.h"
 #include "usart_util.h"
-
-uint16_t start_time, end_time;
-
-char print_buffer[6];
-void print_time(uint16_t val) {
-	itoa(val, print_buffer, 10);
-	puts(print_buffer);
-}
-
+#include "print.h"
+#include "capture.h"
+#include "byte_buffer.h"
 #include "nokia_display.h"
 
 int main(void)
@@ -41,48 +37,58 @@ int main(void)
 	NokiaTextDisplay display;
 
 	display.init(4, 60);
-
-	display.goto_y_x(2, 1);
-	display.print("Hello world!");
-	display.goto_y_x(4, 6);
-	display.print(":)");
-
 	display.goto_y_x(0, 0);
+	display.print("Ready\n");
+
+	SmallByteBuffer captured_bytes;
+	Capture capture(capture_buffer, capture_write_ptr, captured_bytes);
 
 	/* Replace with your application code */
 	for(;;) {
 
-		ATOMIC_BLOCK(ATOMIC_FORCEON) {
-			if (is_button_change()) {
-				clear_button_change();
-				bool button = button_state_on;
+			if (is_new_512hz_cycle()) {
+				clear_new_512hz_cycle();
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
-					HEART_set_level(button);
-					uint16_t ctime = read_time();
-					if (button) {
-						start_time = ctime;
-					} else {
-						end_time = ctime;
-						print_time(end_time - start_time);
+					#ifdef GLOW
+					animate_glow();
+					#endif
+				}
+			}
+
+			NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
+				while (!in_buffer_is_empty()) {
+					char c = getchar();
+					if (c == 'p') {
+						capture_print();
+					} else if (c == 's') {
+						print_param("STA", capture.state);
+					} else if (c == 'w') {
+						print_param("WP ", capture_write_ptr);
+					} else if (c == 'r') {
+						print_param("RP ", capture.capture_read_ptr);
+					} else if (c == 'l') {
+						print_param("BL ", capture.bit_sequence_length);
+					} else if (c == 'h') {
+						print_param("BH ", capture.bit_sequence_high);
 					}
 				}
 			}
 
-			if (is_new_512hz_cycle()) {
-				clear_new_512hz_cycle();
+			if ((capture_write_ptr&~1) != (capture.capture_read_ptr&~1)) {
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
-					wdt_reset();
-					animate_glow();
+					capture.process_capture();
+
+					if (is_capture_finished()) {
+						clear_capture_finished();
+						while (!captured_bytes.is_empty()) {
+							display.print(captured_bytes.read_byte());
+						}
+						display.print('\n');
+					}
 				}
 			}
 
-			while (!in_buffer_is_empty()) {
-				char c = getchar();
-				putchar(c);
-				display.print(c);
-			}
-		}
-
+		wdt_reset();
 		sleep_mode();
 
 	}
