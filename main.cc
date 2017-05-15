@@ -76,7 +76,7 @@ int main(void)
 				}
 			}
 
-			while (in_buf_length() > 0) {
+			while (!in_buffer_is_empty()) {
 				char c = getchar();
 				putchar(c);
 				display.print(c);
