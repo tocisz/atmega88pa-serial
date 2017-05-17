@@ -34,17 +34,18 @@ int main(void)
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cpu_irq_enable();
 
-	NokiaTextDisplay display;
+	SmallByteBuffer captured_bytes;
+	Capture capture(capture_buffer, capture_write_ptr, captured_bytes);
 
+	NokiaTextDisplay display;
 	display.init(4, 60);
 	display.goto_y_x(0, 0);
 	display.print("Ready\n");
 
-	SmallByteBuffer captured_bytes;
-	Capture capture(capture_buffer, capture_write_ptr, captured_bytes);
-
 	/* Replace with your application code */
 	for(;;) {
+
+		ATOMIC_BLOCK(ATOMIC_FORCEON) {
 
 			if (is_new_512hz_cycle()) {
 				clear_new_512hz_cycle();
@@ -70,6 +71,8 @@ int main(void)
 						print_param("BL ", capture.bit_sequence_length);
 					} else if (c == 'h') {
 						print_param("BH ", capture.bit_sequence_high);
+					} else {
+						putchar(c);
 					}
 				}
 			}
@@ -80,13 +83,20 @@ int main(void)
 
 					if (is_capture_finished()) {
 						clear_capture_finished();
+						puts("RADIO:");
 						while (!captured_bytes.is_empty()) {
-							display.print(captured_bytes.read_byte());
+							while(!out_buffer_is_empty());
+							uint8_t b = captured_bytes.read_byte();
+							putchar(b);
+							display.print(b);
 						}
+						putchar('\n');
 						display.print('\n');
 					}
 				}
 			}
+
+		}
 
 		wdt_reset();
 		sleep_mode();

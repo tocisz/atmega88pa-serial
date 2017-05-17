@@ -32,7 +32,6 @@ src
 # List the object files
 OBJS +=  \
 src/wdt.o \
-main.o \
 src/tc8.o \
 src/exint.o \
 driver_isr.o \
@@ -48,11 +47,11 @@ print.o \
 capture.o \
 src/protected_io.o \
 src/spi.o \
-nokia_display.o
+nokia_display.o \
+main.o
 
 OBJS_AS_ARGS +=  \
 "src/wdt.o" \
-"main.o" \
 "src/tc8.o" \
 "src/exint.o" \
 "driver_isr.o" \
@@ -68,7 +67,8 @@ OBJS_AS_ARGS +=  \
 "capture.o" \
 "src/protected_io.o" \
 "src/spi.o" \
-"nokia_display.o"
+"nokia_display.o" \
+"main.o"
 
 # List the dependency files
 DEPS := $(OBJS:%.o=%.d)
@@ -77,7 +77,6 @@ DEPS_AS_ARGS +=  \
 "src/wdt.d" \
 "src/exint.d" \
 "src/tc8.d" \
-"main.d" \
 "print.d" \
 "capture.d" \
 "src/protected_io.d" \
@@ -91,7 +90,8 @@ DEPS_AS_ARGS +=  \
 "src/tc16.d" \
 "src/spi.d" \
 "events.d" \
-"nokia_display.d"
+"nokia_display.d" \
+"main.d"
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 OUTPUT_FILE_NAME :=AtmelStart
