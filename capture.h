@@ -79,6 +79,9 @@ public:
 		init_capture();
 	}
 
+  bool needs_processing() {
+    return (capture_write_ptr&~1) != (capture_read_ptr&~1);
+  }
 	void process_capture();
 
 private:

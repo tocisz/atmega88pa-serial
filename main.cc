@@ -77,7 +77,7 @@ int main(void)
 				}
 			}
 
-			if ((capture_write_ptr&~1) != (capture.capture_read_ptr&~1)) {
+			if (capture.needs_processing()) {
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					capture.process_capture();
 
