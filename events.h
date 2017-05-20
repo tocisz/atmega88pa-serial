@@ -1,13 +1,13 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <util/atomic.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern volatile uint8_t EVENT0;
 
