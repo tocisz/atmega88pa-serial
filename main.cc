@@ -41,13 +41,7 @@ int main(void)
 	NokiaTextDisplay display;
 
 	display.init(4, 60);
-
-	display.goto_y_x(2, 1);
-	display.print("Hello world!");
-	display.goto_y_x(4, 6);
-	display.print(":)");
-
-	display.goto_y_x(0, 0);
+	display.print("Ready\n");
 
 	/* Replace with your application code */
 	for(;;) {

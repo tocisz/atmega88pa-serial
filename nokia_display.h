@@ -68,6 +68,7 @@ public:
   void clear() {
     memset(buffer, ' ', buffer_length);
     redraw();
+    goto_y_x(0, 0);
   }
 
   uint8_t get_x() {
