@@ -77,6 +77,7 @@ DEPS_AS_ARGS +=  \
 "atmel_start.d" \
 "src/ccp.d" \
 "src/protected_io.d" \
+"usart_util.d" \
 "main.d"
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
