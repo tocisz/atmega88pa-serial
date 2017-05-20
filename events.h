@@ -1,3 +1,10 @@
+#ifndef EVENTS_H
+#define EVENTS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <util/atomic.h>
@@ -54,3 +61,9 @@ static inline uint16_t read_adcv(void) {
   }
   return ret;
 }
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
