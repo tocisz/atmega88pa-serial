@@ -1,3 +1,6 @@
+#ifndef EVENTS_H
+#define EVENTS_H
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <util/atomic.h>
@@ -68,4 +71,6 @@ static inline uint16_t read_time(void) {
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
