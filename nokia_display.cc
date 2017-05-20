@@ -34,3 +34,24 @@ void NokiaTextDisplay::print(const char *s) {
 		_print(c);
 	}
 }
+
+void NokiaTextDisplay::redraw() {
+  goto_y_x(0, 0);
+  data();
+  for (uint8_t i = 0; i < buffer_length; ++i) {
+    _print(buffer[i]);
+  }
+}
+
+void NokiaTextDisplay::do_scroll() {
+  char *dst = buffer;
+  char *src = buffer + 14;
+  for (uint8_t i = 0; i < 5; ++i) {
+    memcpy(dst, src, 14);
+    dst = src;
+    src = src + 14;
+  }
+  memset(dst, ' ', 14);
+  redraw();
+  goto_y_x(5, 0);
+}

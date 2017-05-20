@@ -31,7 +31,7 @@ extern const uint8_t FONT[] PROGMEM;
 
 class NokiaTextDisplay {
 public:
-  NokiaTextDisplay() : x(0), y(0) {}
+  NokiaTextDisplay() : x(0), y(0), scroll(true) {}
 
   void start() {
     N_SCK_set_dir(PORT_DIR_OUT);
@@ -66,13 +66,8 @@ public:
   }
 
   void clear() {
-    goto_y_x(0, 0);
-  	data();
-  	for (uint16_t i = 0; i < LCDWIDTH*LCDHEIGHT/8; ++i) {
-  		send(0);
-  	}
-
-    memset(buffer, ' ', 14*8);
+    memset(buffer, ' ', buffer_length);
+    redraw();
   }
 
   uint8_t get_x() {
@@ -83,9 +78,15 @@ public:
     return y;
   }
 
+  void set_scroll(bool _scroll) {
+    scroll = _scroll;
+  }
+
   void init(uint8_t bias, uint8_t contrast);
   void print(char c);
   void print(const char *s);
+  void redraw();
+  void do_scroll();
 
 private:
   void _print(char c) {
@@ -96,10 +97,15 @@ private:
       goto_y_x(y+1, 0);
 
     } else if ((c == '\n') && (y == 5)) {
-      goto_y_x(0, 0);
+      if (scroll) {
+        do_scroll();
+      } else {
+        goto_y_x(0, 0);
+      }
 
     } else if ((c >= 32) && (c <= 128)) {
 
+      buffer[y*14 + x] = c;
       const uint8_t *ptr = FONT + (c - 32)*6;
       for (uint8_t i = 0; i < 6; ++i) {
         send(pgm_read_byte(ptr++));
@@ -122,7 +128,10 @@ private:
   uint8_t x, y;
 
   // current buffer
-  char buffer[14*8];
+  static const size_t buffer_length = 14*6;
+  char buffer[buffer_length];
+
+  bool scroll;
 
 };
 
