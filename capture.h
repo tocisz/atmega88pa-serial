@@ -1,4 +1,5 @@
 #include "byte_buffer.h"
+#include "events.h"
 
 typedef ByteBuffer<16> SmallByteBuffer;
 
