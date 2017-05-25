@@ -42,7 +42,7 @@ int main(void)
 
 	display.init(4, 60);
 	display.print("Ready\n");
-	display.set_cursor_delay(256);
+	display.set_cursor_delay(F_CPU/3906);
 
 	/* Replace with your application code */
 	for(;;) {
