@@ -39,8 +39,8 @@ int main(void)
 
 	NokiaTextDisplay display;
 	display.init(4, 60);
-	display.goto_y_x(0, 0);
 	display.print("Ready\n");
+	display.set_cursor_delay(2048);
 
 	/* Replace with your application code */
 	for(;;) {
@@ -53,6 +53,7 @@ int main(void)
 					#ifdef GLOW
 					animate_glow();
 					#endif
+					display.animate_cursor();
 				}
 			}
 
