@@ -40,7 +40,7 @@ int main(void)
 	NokiaTextDisplay display;
 	display.init(4, 60);
 	display.print("Ready\n");
-	display.set_cursor_delay(2048);
+	display.set_cursor_delay(F_CPU/3906);
 
 	/* Replace with your application code */
 	for(;;) {
