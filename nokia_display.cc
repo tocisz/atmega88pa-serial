@@ -40,7 +40,7 @@ void NokiaTextDisplay::print(const char *s) {
 }
 
 void NokiaTextDisplay::redraw() {
-  goto_y_x(0, 0);
+  _goto_y_x(0, 0);
   data();
   for (uint8_t i = 0; i < buffer_length; ++i) {
     _print_raw(buffer[i]);
@@ -57,7 +57,7 @@ void NokiaTextDisplay::do_scroll() {
   }
   memset(dst, ' ', 14);
   redraw();
-  goto_y_x(5, 0);
+  _goto_y_x(5, 0);
   show_cursor();
 }
 
@@ -67,9 +67,9 @@ void NokiaTextDisplay::redraw_char(
     bool inverse) {
   uint8_t old_y = y;
   uint8_t old_x = x;
-  goto_y_x(pos_y, pos_x);
+  _goto_y_x(pos_y, pos_x);
   char c = buffer[y*14 + x];
   data();
   _print_raw(c, inverse);
-  goto_y_x(old_y, old_x);
+  _goto_y_x(old_y, old_x);
 }

@@ -64,7 +64,7 @@ public:
   void clear() {
     memset(buffer, ' ', buffer_length);
     redraw();
-    goto_y_x(0, 0);
+    _goto_y_x(0, 0);
   }
 
   uint8_t get_x() {
@@ -120,15 +120,20 @@ public:
   void print(const char *s);
   void redraw();
   void do_scroll();
+  void goto_y_x(uint8_t _y, uint8_t _x) {
+    hide_cursor();
+    goto_y_x(_y, _x);
+    show_cursor();
+  }
 
 private:
   // should be called with cursor hidden
   void _print(char c, bool inverse = false) {
     if (c == '\r') {
-      goto_y_x(y, 0);
+      _goto_y_x(y, 0);
 
     } else if ((c == '\n') && (y != 5)) {
-      goto_y_x(y+1, 0);
+      _goto_y_x(y+1, 0);
 
     } else if ((c == '\n') && (y == 5)) {
       scroll_or_wrap();
@@ -163,13 +168,13 @@ private:
     if (scroll) {
       do_scroll();
     } else {
-      goto_y_x(0, 0);
+      _goto_y_x(0, 0);
     }
   }
 
   // we need primitive like this
   // and public method that hides cursor
-  void goto_y_x(uint8_t _y, uint8_t _x) {
+  void _goto_y_x(uint8_t _y, uint8_t _x) {
     control();
     send(PCD8544_SETYADDR | _y);
     send(PCD8544_SETXADDR | _x*6);
