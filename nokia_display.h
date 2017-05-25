@@ -31,7 +31,12 @@ extern const uint8_t FONT[] PROGMEM;
 
 class NokiaTextDisplay {
 public:
-  NokiaTextDisplay() : x(0), y(0), scroll(true) {}
+  NokiaTextDisplay() : x(0), y(0), scroll(true) {
+    cursor_delay = 0;
+    cursor_timer = 0;
+    cursor_visible = false;
+    cursor_enabled = false;
+  }
 
   void start() {
     N_SCK_set_dir(PORT_DIR_OUT);
@@ -56,15 +61,6 @@ public:
     while(!(SPSR & (1<<SPIF)));
   }
 
-  void goto_y_x(uint8_t _y, uint8_t _x) {
-    control();
-    send(PCD8544_SETYADDR | _y);
-    send(PCD8544_SETXADDR | _x*6);
-
-    y = _y;
-    x = _x;
-  }
-
   void clear() {
     memset(buffer, ' ', buffer_length);
     redraw();
@@ -83,6 +79,42 @@ public:
     scroll = _scroll;
   }
 
+  void show_cursor() {
+    cursor_enabled = true;
+    cursor_visible = false;
+    cursor_timer = 0; // redraw it in next animate_cursor() call
+  }
+
+  void hide_cursor() {
+    cursor_enabled = false;
+    if (cursor_visible) {
+      // hide it immediatly
+      redraw_char(y, x, false);
+    }
+  }
+
+  void set_cursor_delay(uint16_t delay) {
+    cursor_delay = delay;
+    if (delay != 0) {
+      show_cursor();
+    } else {
+      hide_cursor(); // and never show it
+    }
+  }
+
+  void animate_cursor() {
+    if (cursor_delay == 0 || !cursor_enabled)
+      return;
+
+    if (cursor_timer != 0) {
+      --cursor_timer;
+    } else {
+      cursor_visible = !cursor_visible;
+      redraw_char(y, x, cursor_visible);
+      cursor_timer = cursor_delay;
+    }
+  }
+
   void init(uint8_t bias, uint8_t contrast);
   void print(char c);
   void print(const char *s);
@@ -90,7 +122,8 @@ public:
   void do_scroll();
 
 private:
-  void _print(char c) {
+  // should be called with cursor hidden
+  void _print(char c, bool inverse = false) {
     if (c == '\r') {
       goto_y_x(y, 0);
 
@@ -98,19 +131,11 @@ private:
       goto_y_x(y+1, 0);
 
     } else if ((c == '\n') && (y == 5)) {
-      if (scroll) {
-        do_scroll();
-      } else {
-        goto_y_x(0, 0);
-      }
+      scroll_or_wrap();
 
     } else if ((c >= 32) && (c <= 128)) {
 
-      buffer[y*14 + x] = c;
-      const uint8_t *ptr = FONT + (c - 32)*6;
-      for (uint8_t i = 0; i < 6; ++i) {
-        send(pgm_read_byte(ptr++));
-      }
+      _print_raw(c, inverse);
 
       x++;
       if (x == 14) {
@@ -119,11 +144,42 @@ private:
       }
 
       if (y == 6) {
-        goto_y_x(0, 0);
+        scroll_or_wrap();
       }
 
     }
   }
+
+  void _print_raw(char c, bool inverse = false) {
+    buffer[y*14 + x] = c;
+    const uint8_t *ptr = FONT + (c - 32)*6;
+    for (uint8_t i = 0; i < 6; ++i) {
+      uint8_t pixels = pgm_read_byte(ptr++);
+      send(inverse ? ~pixels : pixels);
+    }
+  }
+
+  void scroll_or_wrap() {
+    if (scroll) {
+      do_scroll();
+    } else {
+      goto_y_x(0, 0);
+    }
+  }
+
+  // we need primitive like this
+  // and public method that hides cursor
+  void goto_y_x(uint8_t _y, uint8_t _x) {
+    control();
+    send(PCD8544_SETYADDR | _y);
+    send(PCD8544_SETXADDR | _x*6);
+
+    y = _y;
+    x = _x;
+  }
+
+
+  void redraw_char(uint8_t y, uint8_t x, bool inverse);
 
   // current position
   uint8_t x, y;
@@ -133,6 +189,11 @@ private:
   char buffer[buffer_length];
 
   bool scroll;
+
+  uint16_t cursor_delay;
+  uint16_t cursor_timer;
+  bool cursor_visible;
+  bool cursor_enabled;
 
 };
 

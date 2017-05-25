@@ -42,6 +42,7 @@ int main(void)
 
 	display.init(4, 60);
 	display.print("Ready\n");
+	display.set_cursor_delay(256);
 
 	/* Replace with your application code */
 	for(;;) {
@@ -67,6 +68,7 @@ int main(void)
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					wdt_reset();
 					animate_glow();
+					display.animate_cursor();
 				}
 			}
 
