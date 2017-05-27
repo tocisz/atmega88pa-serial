@@ -19,28 +19,7 @@ static inline void animate_glow(void) {
 
 #include "events.h"
 #include "usart_util.h"
-
-// uint16_t start_time, end_time;
-
-bool on = false;
-
-#define MIDDLE_VAL 460
-uint16_t low_cnt = 0;
-uint16_t high_cnt = 0;
-
-bool state_high = false;
-
-static inline void reset_cnt() {
-	low_cnt = 0;
-	high_cnt = 0;
-}
-
-char print_buffer[6];
-void print_param(char *name, uint16_t val) {
-	itoa(val, print_buffer, 10);
-	fputs(name, stdout);
-	puts(print_buffer);
-}
+#include "print.h"
 
 void read_adc(void) {
 	print_param("ADC ", read_adcv());
@@ -63,7 +42,7 @@ int main(void)
 				bool button = Events.button_state_on;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					HEART_set_level(button);
-					// uint16_t ctime = read_time();
+					uint16_t ctime = read_time();
 					if (button) {
 						read_adc();
 					}
@@ -78,7 +57,7 @@ int main(void)
 				}
 			}
 
-			while (in_buf_length() > 0) {
+			while (!in_buffer.is_empty()) {
 				putchar(getchar());
 			}
 		}

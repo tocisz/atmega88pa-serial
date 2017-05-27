@@ -43,6 +43,8 @@ src/ccp.o \
 src/protected_io.o \
 events.o \
 usart_util.o \
+usart_util0.o \
+print.o \
 main.o
 
 OBJS_AS_ARGS +=  \
@@ -58,6 +60,8 @@ OBJS_AS_ARGS +=  \
 "src/protected_io.o" \
 "events.o" \
 "usart_util.o" \
+"usart_util0.o" \
+"print.o" \
 "main.o"
 
 # List the dependency files
@@ -70,10 +74,14 @@ DEPS_AS_ARGS +=  \
 "src/tc8.d" \
 "src/usart.d" \
 "src/wdt.d" \
+"src/adc.d" \
 "atmel_start.d" \
 "src/ccp.d" \
 "src/protected_io.d" \
+"events.d" \
 "usart_util.d" \
+"usart_util0.d" \
+"print.d" \
 "main.d"
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
@@ -118,7 +126,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 %.o: %.c
 	@echo Building file: $<
 	@echo AVR/GNU C Compiler
-	$(QUOTE)avr-gcc$(QUOTE) -x c -DF_CPU=1000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)avr-gcc$(QUOTE) -x c -DF_CPU=8000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
     -D__mega88__ \
 -I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \
@@ -140,7 +148,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 %.o: %.s
 	@echo Building file: $<
 	@echo AVR/GNU Assembler
-	$(QUOTE)avr-gcc$(QUOTE) -x assembler-with-cpp -DF_CPU=1000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)avr-gcc$(QUOTE) -x assembler-with-cpp -DF_CPU=8000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
     -D__mega88__ \
 -I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \
@@ -151,7 +159,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 %.o: %.S
 	@echo Building file: $<
 	@echo AVR/GNU Preprocessing Assembler
-	$(QUOTE)avr-gcc$(QUOTE) -x assembler-with-cpp -DF_CPU=1000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)avr-gcc$(QUOTE) -x assembler-with-cpp -DF_CPU=8000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
     -D__mega88__ \
 -I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \

@@ -12,6 +12,8 @@
 #include "events.h"
 #include "usart_util.h"
 
+#define BUTTON
+
 // contdown to limit button instability
 uint8_t button_block = 0;
 
@@ -25,16 +27,14 @@ static inline void handle_button_state_change(void) {
 
 ISR(USART_RX_vect)
 {
-	USART_in_buffer[USART_in_end++] = USART_getc();
-	if (USART_in_end == BUFLEN) USART_in_end = 0;
+	in_buffer.write_byte(USART_getc());
 	HEART_toggle_level();
 }
 
 ISR(USART_UDRE_vect)
 {
-	if (USART_out_begin != USART_out_end) {
-		USART_putc(USART_out_buffer[USART_out_begin++]);
-		if (USART_out_begin == BUFLEN) USART_out_begin = 0;
+	if (!out_buffer.is_empty()) {
+		USART_putc(out_buffer.read_byte());
 	} else {
 		USART_disable_udre();
 	}
@@ -52,17 +52,6 @@ ISR(TIMER0_OVF_vect)
 	if (button_block > 0) {
 		--button_block;
 	}
-}
-
-ISR(PCINT1_vect)
-{
-	if (button_block)
-		return;
-
-	handle_button_state_change();
-
-	// 1 can give arbitrary small delay (we don't reset timer)
-	button_block = 2;
 }
 
 ISR(ADC_vect)

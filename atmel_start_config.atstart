@@ -37,7 +37,7 @@ drivers:
       pm_pud: false
       pm_se: false
       pm_sm: Idle
-      prescaler_divider: '8'
+      prescaler_divider: '1'
     optional_signals: []
     variant: null
     clocks:
