@@ -67,5 +67,7 @@ ISR(PCINT1_vect)
 
 ISR(ADC_vect)
 {
-	adcv = (ADCH<<8)|ADCL;
+	uint8_t l = ADCL;
+	uint8_t h = ADCH;
+	adcv = (h<<8)|l;
 }
