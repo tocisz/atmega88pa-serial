@@ -54,6 +54,17 @@ ISR(TIMER0_OVF_vect)
 	}
 }
 
+ISR(PCINT1_vect)
+{
+  if (button_block)
+  	return;
+
+  handle_button_state_change();
+
+  // 1 can give arbitrary small delay (we don't reset timer)
+  button_block = 2;
+}
+
 ISR(ADC_vect)
 {
 	uint8_t l = ADCL;
