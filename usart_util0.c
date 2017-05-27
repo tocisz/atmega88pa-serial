@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "usart_util.h"
 
 int USART_putchar(char c, FILE *stream);
 int USART_getchar(FILE *stream);

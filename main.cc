@@ -58,7 +58,7 @@ int main(void)
 				}
 			}
 
-			while (!in_buffer_is_empty()) {
+			while (!in_buffer.is_empty()) {
 				putchar(getchar());
 			}
 		}

@@ -27,14 +27,14 @@ static inline void handle_button_state_change(void) {
 
 ISR(USART_RX_vect)
 {
-	in_buffer_write_byte(USART_getc());
+	in_buffer.write_byte(USART_getc());
 	HEART_toggle_level();
 }
 
 ISR(USART_UDRE_vect)
 {
-	if (!out_buffer_is_empty()) {
-		USART_putc(out_buffer_read_byte());
+	if (!out_buffer.is_empty()) {
+		USART_putc(out_buffer.read_byte());
 	} else {
 		USART_disable_udre();
 	}

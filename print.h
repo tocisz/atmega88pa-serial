@@ -7,5 +7,5 @@ static inline void print_pair(uint16_t a, uint16_t b) {
 	print_align(a);
 	print_align(b);
 	putchar('\n');
-	while (!out_buffer_is_empty()); //wait
+	while (!out_buffer.is_empty()); //wait
 }

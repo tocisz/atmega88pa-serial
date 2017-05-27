@@ -5,16 +5,12 @@
 #include <stdbool.h>
 #include <util/atomic.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct EventFlags {
   bool button_change : 1;
   bool new_512hz_cycle : 1;
   bool button_state_on : 1; // see driver_isr.c
 };
-extern volatile struct EventFlags Events;
+extern volatile EventFlags Events;
 
 extern volatile uint16_t time;
 
@@ -25,9 +21,5 @@ static inline uint16_t read_time(void) {
   }
   return ret;
 }
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
