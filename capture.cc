@@ -86,7 +86,7 @@ void Capture::capture_bit() {
 		if (terminate) {
 			emit_bit((bit_sequence_high > bit_threshold) ? 1 : 0);
       bit_buffer.flush();
-      set_capture_finished();
+      Events.capture_finished = true;
 			init_capture();
 			return;
 		}

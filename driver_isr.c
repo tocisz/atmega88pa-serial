@@ -20,9 +20,9 @@ uint8_t button_block = 0;
 
 static inline void handle_button_state_change(void) {
 	bool level = !BUTTON_get_level();
-	if (button_state_on != level) {
-		button_state_on = level;
-		set_button_change();
+	if (Events.button_state_on != level) {
+		Events.button_state_on = level;
+		Events.button_change = true;
 	}
 }
 
@@ -43,7 +43,7 @@ ISR(USART_UDRE_vect)
 
 ISR(TIMER0_OVF_vect)
 {
-	set_new_512hz_cycle();
+	Events.new_512hz_cycle = true;
 
 	++time;
 

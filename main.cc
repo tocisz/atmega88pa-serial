@@ -47,8 +47,8 @@ int main(void)
 
 		ATOMIC_BLOCK(ATOMIC_FORCEON) {
 
-			if (is_new_512hz_cycle()) {
-				clear_new_512hz_cycle();
+			if (Events.new_512hz_cycle) {
+				Events.new_512hz_cycle = false;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					#ifdef GLOW
 					animate_glow();
@@ -82,8 +82,8 @@ int main(void)
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					capture.process_capture();
 
-					if (is_capture_finished()) {
-						clear_capture_finished();
+					if (Events.capture_finished) {
+						Events.capture_finished = false;
 						puts("RADIO:");
 						while (!captured_bytes.is_empty()) {
 							while(!out_buffer_is_empty());
