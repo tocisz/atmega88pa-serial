@@ -9,7 +9,7 @@
 #define DRIVER_INIT_H_INCLUDED
 
 #ifndef F_CPU
-#define F_CPU 1000000
+#define F_CPU 8000000
 #endif
 
 #include <compiler.h>
@@ -19,7 +19,6 @@
 #include <sysctrl.h>
 #include <wdt.h>
 #include <exint.h>
-#include <tc8.h>
 #include <tc8.h>
 #include <usart.h>
 

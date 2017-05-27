@@ -19,14 +19,9 @@ static inline void animate_glow(void) {
 
 #include "events.h"
 #include "usart_util.h"
+#include "print.h"
 
 uint16_t start_time, end_time;
-
-char print_buffer[6];
-void print_time(uint16_t val) {
-	itoa(val, print_buffer, 10);
-	puts(print_buffer);
-}
 
 int main(void)
 {
@@ -50,7 +45,7 @@ int main(void)
 						start_time = ctime;
 					} else {
 						end_time = ctime;
-						print_time(end_time - start_time);
+						print_param("", end_time - start_time);
 					}
 				}
 			}
@@ -63,7 +58,7 @@ int main(void)
 				}
 			}
 
-			while (in_buf_length() > 0) {
+			while (!in_buffer_is_empty()) {
 				putchar(getchar());
 			}
 		}
