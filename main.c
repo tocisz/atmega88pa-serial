@@ -43,9 +43,9 @@ int main(void)
 	for(;;) {
 
 		ATOMIC_BLOCK(ATOMIC_FORCEON) {
-			if (is_button_change()) {
-				clear_button_change();
-				if (button_state_on) {
+			if (Events.button_change) {
+				Events.button_change = false;
+				if (Events.button_state_on) {
 					NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 						if (!playing) {
 							next_melody();
@@ -59,8 +59,8 @@ int main(void)
 				}
 			}
 
-			if (is_new_512hz_cycle()) {
-				clear_new_512hz_cycle();
+			if (Events.new_512hz_cycle) {
+				Events.new_512hz_cycle = false;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					wdt_reset();
 					animate_glow();
@@ -68,15 +68,15 @@ int main(void)
 				}
 			}
 
-			if (is_new_sound_cycle()) {
-				clear_new_sound_cycle();
+			if (Events.new_sound_cycle) {
+				Events.new_sound_cycle = false;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					start_new_cycle();
 				}
 			}
 
-			if (is_finished_playing()) {
-				clear_finished_playing();
+			if (Events.finished_playing) {
+				Events.finished_playing = false;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					playing = false;
 					HEART_set_level(playing);

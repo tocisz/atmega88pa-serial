@@ -234,7 +234,7 @@ void sound_scheduler() {
       case SCHEDULED_SOUND_STOP:
         if (last_note) {
           stop_play();
-          set_finished_playing();
+          Events.finished_playing = true;
         } else {
           sound_off();
           schedule_note(scheduler_time);
