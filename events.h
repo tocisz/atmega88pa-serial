@@ -4,16 +4,19 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <util/atomic.h>
+#include "adc_buffer.h"
 
 struct EventFlags {
   bool button_change : 1;
   bool new_512hz_cycle : 1;
   bool button_state_on : 1; // see driver_isr.c
 };
-extern volatile EventFlags Events;
+typedef ADCBuffer<84> ADCBufferT;
 
+extern volatile EventFlags Events;
 extern volatile uint16_t time;
 extern volatile uint16_t adcv;
+extern ADCBufferT adc_values;
 
 static inline uint16_t read_time(void) {
   uint16_t ret;

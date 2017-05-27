@@ -21,4 +21,5 @@ void print_align(uint16_t val) {
 	}
 	putchar(' ');
 	fputs(print_buffer, stdout);
+	while (!out_buffer.is_empty()); //wait
 }

@@ -12,8 +12,20 @@ public:
     write_ptr = 0;
   }
 
+  void reset() {
+    read_ptr = write_ptr;
+  }
+
   bool is_empty() {
     return read_ptr == write_ptr;
+  }
+
+  uint8_t length() {
+    return (write_ptr - read_ptr) % S;
+  }
+
+  bool is_full() {
+    return length() == S-1;
   }
 
   uint8_t read_byte() {
@@ -28,6 +40,10 @@ public:
     buffer[write_ptr++] = b;
     if (write_ptr == S) {
       write_ptr = 0;
+    }
+    if (write_ptr == read_ptr) {
+      // lose last byte
+      ++read_ptr;
     }
   }
 

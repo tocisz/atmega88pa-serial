@@ -22,7 +22,14 @@ static inline void animate_glow(void) {
 #include "print.h"
 
 void read_adc(void) {
-	print_param("ADC ", read_adcv());
+	// print_param("ADC ", read_adcv());
+	adc_values.capture();
+	ADCBufferT::ByteBufferT &captured = adc_values.get_captured();
+	puts("ADC");
+	uint8_t i = 0;
+	while(!captured.is_empty()) {
+		print_pair(++i, captured.read_byte());
+	}
 }
 
 int main(void)
@@ -42,7 +49,6 @@ int main(void)
 				bool button = Events.button_state_on;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					HEART_set_level(button);
-					uint16_t ctime = read_time();
 					if (button) {
 						read_adc();
 					}
