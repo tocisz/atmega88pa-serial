@@ -10,13 +10,12 @@ extern "C" {
 #endif
 
 struct EventFlags {
-  uint8_t button_change : 1;
-  uint8_t new_512hz_cycle : 1;
+  bool button_change : 1;
+  bool new_512hz_cycle : 1;
+  bool button_state_on : 1; // see driver_isr.c
 };
 extern volatile struct EventFlags Events;
 
-// see driver_isr.c
-extern volatile bool button_state_on;
 extern volatile uint16_t time;
 
 static inline uint16_t read_time(void) {
