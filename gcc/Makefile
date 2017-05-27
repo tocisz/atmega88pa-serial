@@ -75,6 +75,7 @@ DEPS_AS_ARGS +=  \
 "atmel_start.d" \
 "src/ccp.d" \
 "src/protected_io.d" \
+"events.d" \
 "usart_util.d" \
 "usart_util0.d" \
 "print.d" \
