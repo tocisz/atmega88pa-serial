@@ -58,16 +58,15 @@ int8_t ADC_0_init()
 	ADCSRA = (1 << ADEN)    /* ADC: enabled */
 	         | (1 << ADATE) /* Auto Trigger: enabled */
 	         | (1 << ADIE)  /* ADC Interrupt: enabled */
-	         | (0x04 << ADPS0) /* 16 */;
-
-	ADCSRB = (0x04 << ADTS0) /* Timer/Counter0 Overflow */
+	         | (0x06 << ADPS0) /* 64 */;
+	ADCSRB = (0x00 << ADTS0) /* Free Running mode */
 	         | (0 << ACME) /* Analog Comparator Multiplexer: disabled */;
 
 	DIDR0 = (1 << ADC0D)   /* Digital Input: disabled */
 	        | (1 << ADC1D) /* Digital Input: disabled */
 	        | (1 << ADC2D) /* Digital Input: disabled */
 	        | (1 << ADC3D) /* Digital Input: disabled */
-	        | (0 << ADC4D) /* Digital Input: enabled */
+	        | (1 << ADC4D) /* Digital Input: disabled */
 	        | (1 << ADC5D) /* Digital Input: disabled */;
 
 	return 0;

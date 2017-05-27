@@ -70,5 +70,5 @@ ISR(ADC_vect)
 	uint8_t l = ADCL;
 	uint8_t h = ADCH;
 	adcv = (h<<8)|l;
-	adc_values.store(h);
+	adc_values.store(adcv);
 }

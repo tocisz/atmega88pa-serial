@@ -38,12 +38,17 @@ public:
 
   void write_byte(uint8_t b) {
     buffer[write_ptr++] = b;
-    if (write_ptr == S) {
-      write_ptr = 0;
-    }
+    wrap(write_ptr);
     if (write_ptr == read_ptr) {
       // lose last byte
       ++read_ptr;
+      wrap(read_ptr);
+    }
+  }
+
+  void wrap(volatile uint8_t &num) {
+    if (num == S) {
+      num = 0;
     }
   }
 
