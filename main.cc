@@ -58,7 +58,7 @@ int main(void)
 			}
 
 			NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
-				while (!in_buffer_is_empty()) {
+				while (!in_buffer.is_empty()) {
 					char c = getchar();
 					if (c == 'p') {
 						capture_print();
@@ -86,7 +86,7 @@ int main(void)
 						Events.capture_finished = false;
 						puts("RADIO:");
 						while (!captured_bytes.is_empty()) {
-							while(!out_buffer_is_empty());
+							while(!out_buffer.is_empty());
 							uint8_t b = captured_bytes.read_byte();
 							putchar(b);
 							display.print(b);
