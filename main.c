@@ -40,8 +40,8 @@ int main(void)
 	for(;;) {
 
 		ATOMIC_BLOCK(ATOMIC_FORCEON) {
-			if (is_button_change()) {
-				clear_button_change();
+			if (Events.button_change) {
+				Events.button_change = 0;
 				bool button = button_state_on;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					HEART_set_level(button);
@@ -55,8 +55,8 @@ int main(void)
 				}
 			}
 
-			if (is_new_512hz_cycle()) {
-				clear_new_512hz_cycle();
+			if (Events.new_512hz_cycle) {
+				Events.new_512hz_cycle = 0;
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					wdt_reset();
 					animate_glow();
