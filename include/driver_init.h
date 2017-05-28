@@ -20,6 +20,7 @@
 #include <wdt.h>
 #include <exint.h>
 #include <adc.h>
+#include <spi.h>
 #include <tc8.h>
 #include <usart.h>
 

@@ -20,6 +20,7 @@ static inline void animate_glow(void) {
 #include "events.h"
 #include "usart_util.h"
 #include "print.h"
+#include "nokia_display.h"
 
 void read_adc(void) {
 	// print_param("ADC ", read_adcv());
@@ -39,6 +40,12 @@ int main(void)
 	USART_util_init();
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cpu_irq_enable();
+
+	NokiaTextDisplay display;
+
+	display.init(4, 60);
+	display.print("Ready\n");
+	display.set_cursor_delay(F_CPU/3906);
 
 	/* Replace with your application code */
 	for(;;) {
@@ -60,6 +67,7 @@ int main(void)
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					wdt_reset();
 					animate_glow();
+					display.animate_cursor();
 				}
 			}
 

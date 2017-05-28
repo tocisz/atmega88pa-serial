@@ -40,11 +40,13 @@ src/wdt.o \
 src/adc.o \
 atmel_start.o \
 src/ccp.o \
+src/spi.o \
 src/protected_io.o \
 events.o \
 usart_util.o \
 usart_util0.o \
 print.o \
+nokia_display.o \
 main.o
 
 OBJS_AS_ARGS +=  \
@@ -57,11 +59,13 @@ OBJS_AS_ARGS +=  \
 "src/adc.o" \
 "atmel_start.o" \
 "src/ccp.o" \
+"src/spi.o" \
 "src/protected_io.o" \
 "events.o" \
 "usart_util.o" \
 "usart_util0.o" \
 "print.o" \
+"nokia_display.o" \
 "main.o"
 
 # List the dependency files
@@ -77,11 +81,13 @@ DEPS_AS_ARGS +=  \
 "src/adc.d" \
 "atmel_start.d" \
 "src/ccp.d" \
+"src/spi.d" \
 "src/protected_io.d" \
 "events.d" \
 "usart_util.d" \
 "usart_util0.d" \
 "print.d" \
+"nokia_display.d" \
 "main.d"
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))

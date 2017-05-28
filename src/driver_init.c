@@ -69,6 +69,42 @@ void system_init()
 	Analog_set_pull_mode(PORT_PULL_OFF);
 	Analog_set_dir(PORT_DIR_OFF);
 
+	// PORT on PB1
+
+	// Set pin direction to output
+	N_D_C_set_dir(PORT_DIR_OUT);
+
+	N_D_C_set_level(
+	    // <y> Initial level
+	    // <id> pad_initial_level
+	    // <false"> Low
+	    // <true"> High
+	    false);
+
+	// PORT on PB2
+
+	// Set pin direction to output
+	N_RST_set_dir(PORT_DIR_OUT);
+
+	N_RST_set_level(
+	    // <y> Initial level
+	    // <id> pad_initial_level
+	    // <false"> Low
+	    // <true"> High
+	    false);
+
+	// PORT on PB4
+
+	// Set pin direction to output
+	N_SCE_set_dir(PORT_DIR_OUT);
+
+	N_SCE_set_level(
+	    // <y> Initial level
+	    // <id> pad_initial_level
+	    // <false"> Low
+	    // <true"> High
+	    true);
+
 	sysctrl_init();
 
 	WDT_0_init();
@@ -76,6 +112,8 @@ void system_init()
 	exint_0_init();
 
 	ADC_0_init();
+
+	SPI_0_init();
 
 	tc8_0_init();
 
