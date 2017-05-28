@@ -36,6 +36,12 @@ public:
     return b;
   }
 
+  uint16_t read_short() {
+    uint16_t result = read_byte();
+    result = (result<<8) | read_byte();
+    return result;
+  }
+
   void write_byte(uint8_t b) {
     buffer[write_ptr++] = b;
     wrap(write_ptr);

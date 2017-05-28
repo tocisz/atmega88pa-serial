@@ -13,10 +13,10 @@ void print_param(const char *name, uint16_t val) {
 	while (!out_buffer.is_empty()); //wait
 }
 
-void print_align(uint16_t val) {
+void print_align(uint16_t val, const uint8_t align) {
 	ltoa(val, print_buffer, 10);
 	uint8_t len = strlen(print_buffer);
-	for (int8_t i = 3-len; i > 0; --i) {
+	for (int8_t i = align-len; i > 0; --i) {
 		putchar(' ');
 	}
 	putchar(' ');

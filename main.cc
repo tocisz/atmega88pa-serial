@@ -28,7 +28,7 @@ void read_adc(void) {
 	puts("ADC");
 	uint8_t i = 0;
 	while(!captured.is_empty()) {
-		print_pair(++i, captured.read_byte());
+		print_pair(++i, captured.read_short());
 	}
 }
 

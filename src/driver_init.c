@@ -66,6 +66,7 @@ void system_init()
 	// PORT on PC4
 
 	// Disable digital pin circuitry
+	Analog_set_pull_mode(PORT_PULL_OFF);
 	Analog_set_dir(PORT_DIR_OFF);
 
 	sysctrl_init();
