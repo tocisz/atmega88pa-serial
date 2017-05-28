@@ -73,3 +73,37 @@ void NokiaTextDisplay::redraw_char(
   _print_raw(c, inverse);
   _goto_y_x(old_y, old_x);
 }
+
+void NokiaOscDisplay::init(uint8_t bias, uint8_t contrast) {
+  start();
+  // RST is set LOW in system_init()
+  // N_RST_set_level(false);
+  // _delay_ms(100);
+  N_RST_set_level(true);
+  control();
+  send(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
+  send(PCD8544_SETBIAS | bias);
+  send(PCD8544_FUNCTIONSET);
+
+  send(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
+  if (contrast > 0x7f) contrast = 0x7f;
+  send(PCD8544_SETVOP | contrast);
+  send(PCD8544_FUNCTIONSET | PCD8544_VERTICAL);
+
+  send(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
+  clear();
+}
+
+void NokiaOscDisplay::draw_bar(uint8_t height) {
+  data();
+  height = 48 - height;
+  for (int i = 0; i < 6; ++i) {
+    if (height > 7) {
+      send(0);
+      height -= 8;
+    } else {
+      send(0xff << height);
+      height = 0;
+    }
+  }
+}
