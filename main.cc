@@ -22,14 +22,20 @@ static inline void animate_glow(void) {
 #include "print.h"
 #include "nokia_display.h"
 
+NokiaOscDisplay display;
+
 void read_adc(void) {
 	// print_param("ADC ", read_adcv());
 	adc_values.capture();
 	ADCBufferT::ByteBufferT &captured = adc_values.get_captured();
-	puts("ADC");
-	uint8_t i = 0;
+	// puts("ADC");
+	// uint8_t i = 0;
+	display.goto_x(0);
 	while(!captured.is_empty()) {
-		print_pair(++i, captured.read_short());
+		uint16_t v = captured.read_short();
+		uint8_t vs = v / 21;
+		// print_pair(vs, v);
+		display.draw_bar(vs);
 	}
 }
 
@@ -41,11 +47,17 @@ int main(void)
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cpu_irq_enable();
 
+/*
 	NokiaTextDisplay display;
 
 	display.init(4, 60);
 	display.print("Ready\n");
 	display.set_cursor_delay(F_CPU/3906);
+*/
+	display.init(4, 60);
+
+	bool on = false;
+	uint8_t draw_cnt = 0;
 
 	/* Replace with your application code */
 	for(;;) {
@@ -57,7 +69,7 @@ int main(void)
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					HEART_set_level(button);
 					if (button) {
-						read_adc();
+						on = !on;
 					}
 				}
 			}
@@ -67,7 +79,12 @@ int main(void)
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					wdt_reset();
 					animate_glow();
-					display.animate_cursor();
+					// display.animate_cursor();
+					if (on && !draw_cnt) {
+						draw_cnt = 16;
+						read_adc();
+					}
+					--draw_cnt;
 				}
 			}
 

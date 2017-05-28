@@ -20,6 +20,7 @@ extern const uint8_t FONT[] PROGMEM;
 
 // H = 0
 #define PCD8544_FUNCTIONSET 0x20
+#define PCD8544_VERTICAL 0x02
 #define PCD8544_DISPLAYCONTROL 0x08
 #define PCD8544_SETYADDR 0x40
 #define PCD8544_SETXADDR 0x80
@@ -199,6 +200,64 @@ private:
   uint16_t cursor_timer;
   bool cursor_visible;
   bool cursor_enabled;
+
+};
+
+class NokiaOscDisplay {
+public:
+  NokiaOscDisplay() : x(0) {}
+
+  void start() {
+    N_SCK_set_dir(PORT_DIR_OUT);
+  	N_MOSI_set_dir(PORT_DIR_OUT);
+  	N_SCE_set_level(false);
+  }
+
+  void stop() {
+    N_SCE_set_level(true);
+  }
+
+  void control() {
+    N_D_C_set_level(false);
+  }
+
+  void data() {
+    N_D_C_set_level(true);
+  }
+
+  void send(uint8_t b) {
+    SPDR = b;
+    while(!(SPSR & (1<<SPIF)));
+  }
+
+  void clear() {
+    goto_x(0);
+    data();
+    for (uint16_t i = 0; i < buffer_length; ++i) {
+      send(0);
+    }
+  }
+
+  uint8_t get_x() {
+    return x;
+  }
+
+  void goto_x(uint8_t _x) {
+    control();
+    send(PCD8544_SETYADDR);
+    send(PCD8544_SETXADDR | _x*6);
+
+    x = _x;
+  }
+
+  void init(uint8_t bias, uint8_t contrast);
+  void draw_bar(uint8_t height);
+
+private:
+  // current position
+  uint8_t x;
+
+  static const size_t buffer_length = 84*6;
 
 };
 
