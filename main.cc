@@ -26,8 +26,7 @@ NokiaOscDisplay display;
 
 void read_adc(void) {
 	// print_param("ADC ", read_adcv());
-	adc_values.capture();
-	ADCBufferT::ByteBufferT &captured = adc_values.get_captured();
+	ADCBufferT::ByteBufferT &captured = adc_values.capture();
 	// puts("ADC");
 	// uint8_t i = 0;
 	display.goto_x(0);
@@ -37,6 +36,7 @@ void read_adc(void) {
 		// print_pair(vs, v);
 		display.draw_bar(vs);
 	}
+	display.goto_x(0); // without it last byte is not visible
 }
 
 int main(void)

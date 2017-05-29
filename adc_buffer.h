@@ -17,23 +17,13 @@ public:
     bbs[active_bb].write_byte(l);
   }
 
-  void capture() {
-    uint8_t inactive = (~active_bb)&1;
-    bbs[inactive].reset();
-    active_bb = inactive;
-    fix_inactive_parity();
-  }
-
-  void fix_inactive_parity() {
-    uint8_t inactive = (~active_bb)&1;
-    if (bbs[inactive].length() % 2) { // ensure parity
-      bbs[inactive].read_byte();
-    }
-  }
-
-  ByteBufferT &get_captured() {
-    uint8_t inactive = (~active_bb)&1;
-    return bbs[inactive];
+  ByteBufferT &capture() {
+    uint8_t g1_active = active_bb;
+    uint8_t g2_active = (~active_bb)&1;
+    bbs[g2_active].reset();
+    active_bb = g2_active;
+    fix_inactive_parity(g1_active);
+    return bbs[g1_active];
   }
 
   void set_middle(uint16_t m) {
@@ -48,6 +38,13 @@ private:
   uint8_t convert(uint16_t v) {
     return (v-middle);
   }
+
+  void fix_inactive_parity(uint8_t inactive) {
+    if (bbs[inactive].length() % 2) { // ensure parity
+      bbs[inactive].read_byte();
+    }
+  }
+
 };
 
 #endif

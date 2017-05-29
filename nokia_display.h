@@ -236,6 +236,7 @@ public:
     for (uint16_t i = 0; i < buffer_length; ++i) {
       send(0);
     }
+    goto_x(0);
   }
 
   uint8_t get_x() {
