@@ -82,7 +82,6 @@ int main(void)
 	display.set_cursor_delay(F_CPU/3906);
 */
 	display.init(4, 60);
-	display.clear();
 
 	bool on = false;
 	uint8_t draw_cnt = 0;

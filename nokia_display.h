@@ -55,9 +55,9 @@ public:
     _wait();
   }
 
-  void init(uint8_t bias, uint8_t contrast, bool vertical = false);
-
 protected:
+  void _init(uint8_t bias, uint8_t contrast, bool vertical);
+
   void _send_no_wait(uint8_t b) {
     SPDR = b;
   }
@@ -75,6 +75,11 @@ public:
     cursor_timer = 0;
     cursor_visible = false;
     cursor_enabled = false;
+  }
+
+  void init(uint8_t bias, uint8_t contrast) {
+    _init(bias, contrast, false);
+    clear();
   }
 
   void clear() {
@@ -221,6 +226,11 @@ class NokiaOscDisplay : public NokiaDisplayBase {
 public:
   NokiaOscDisplay() : x(0) {}
 
+  void init(uint8_t bias, uint8_t contrast) {
+    _init(bias, contrast, true);
+    clear();
+  }
+
   void clear() {
     goto_x(0);
     data();
@@ -255,6 +265,11 @@ private:
 class NokiaGraphDisplay : public NokiaDisplayBase {
 public:
   NokiaGraphDisplay() : x(0), y(0) {}
+
+  void init(uint8_t bias, uint8_t contrast) {
+    _init(bias, contrast, false);
+    clear();
+  }
 
   void clear() {
     memset(buffer, 0, buffer_length);
