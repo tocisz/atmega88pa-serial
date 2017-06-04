@@ -59,7 +59,8 @@ int8_t ADC_0_init()
 	         | (1 << ADATE) /* Auto Trigger: enabled */
 	         | (1 << ADIE)  /* ADC Interrupt: enabled */
 	         | (0x06 << ADPS0) /* 64 */;
-	ADCSRB = (0x00 << ADTS0) /* Free Running mode */
+	ADCSRB = //(0x04 << ADTS0) /* Timer/Counter0 Overflow */
+					 (0x00 << ADTS0) /* Free Running mode */
 	         | (0 << ACME) /* Analog Comparator Multiplexer: disabled */;
 
 	DIDR0 = (1 << ADC0D)   /* Digital Input: disabled */

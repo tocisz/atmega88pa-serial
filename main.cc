@@ -39,6 +39,16 @@ void read_adc(void) {
 	display.goto_x(0); // without it last byte is not visible
 }
 
+void adc_start() {
+	ADCSRA |= (1 << ADEN);
+	// ADCSRA |= (1 << ADATE) | (1<<ADSC);
+}
+
+void adc_stop() {
+	ADCSRA &= ~(1 << ADEN);
+	// ADCSRA &= ~(1 << ADATE);
+}
+
 int main(void)
 {
 	/* Initializes MCU, drivers and middleware */
@@ -70,6 +80,11 @@ int main(void)
 					HEART_set_level(button);
 					if (button) {
 						on = !on;
+						if (on) {
+							adc_start();
+						} else {
+							adc_stop();
+						}
 					}
 				}
 			}
@@ -81,7 +96,7 @@ int main(void)
 					animate_glow();
 					// display.animate_cursor();
 					if (on && !draw_cnt) {
-						draw_cnt = 16;
+						draw_cnt = 32;
 						read_adc();
 					}
 					--draw_cnt;
