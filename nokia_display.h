@@ -262,4 +262,72 @@ private:
 
 };
 
+class NokiaGraphDisplay {
+public:
+  NokiaGraphDisplay() : x(0), y(0) {}
+
+  void start() {
+    N_SCK_set_dir(PORT_DIR_OUT);
+  	N_MOSI_set_dir(PORT_DIR_OUT);
+  	N_SCE_set_level(false);
+  }
+
+  void stop() {
+    N_SCE_set_level(true);
+  }
+
+  void control() {
+    N_D_C_set_level(false);
+  }
+
+  void data() {
+    N_D_C_set_level(true);
+  }
+
+  void send(uint8_t b) {
+    _send_no_wait(b);
+    _wait();
+  }
+
+  void clear() {
+    memset(buffer, 0, buffer_length);
+    redraw();
+    goto_y_x(0, 0);
+  }
+
+  uint8_t get_x() {
+    return x;
+  }
+
+  void goto_y_x(uint8_t _y, uint8_t _x) {
+    control();
+    send(PCD8544_SETYADDR | _y / 8);
+    send(PCD8544_SETXADDR | _x);
+
+    y = _y;
+    x = _x;
+  }
+
+  void init(uint8_t bias, uint8_t contrast);
+  void redraw();
+  void put_pixel(uint8_t color);
+
+private:
+  // current position
+  uint8_t x, y;
+
+  // current buffer
+  static const size_t buffer_length = 14*6;
+  char buffer[buffer_length];
+
+  void _send_no_wait(uint8_t b) {
+    SPDR = b;
+  }
+
+  void _wait() {
+    while(!(SPSR & (1<<SPIF)));
+  }
+
+};
+
 #endif
