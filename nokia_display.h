@@ -310,14 +310,15 @@ public:
   void init(uint8_t bias, uint8_t contrast);
   void redraw();
   void put_pixel(uint8_t color);
+  void scroll();
 
 private:
   // current position
   uint8_t x, y;
 
   // current buffer
-  static const size_t buffer_length = 14*6;
-  char buffer[buffer_length];
+  static const size_t buffer_length = 84*6;
+  uint8_t buffer[buffer_length];
 
   void _send_no_wait(uint8_t b) {
     SPDR = b;
