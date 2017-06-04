@@ -113,7 +113,7 @@ int main(void)
 					animate_glow();
 					// display.animate_cursor();
 					if (on && !draw_cnt) {
-						draw_cnt = 32;
+						draw_cnt = 16;
 						read_adc();
 					}
 					--draw_cnt;

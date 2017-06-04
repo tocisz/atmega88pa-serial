@@ -133,16 +133,16 @@ void NokiaGraphDisplay::init(uint8_t bias, uint8_t contrast) {
 void NokiaGraphDisplay::redraw() {
   goto_y_x(0, 0);
   data();
-  for (uint8_t i = 0; i < buffer_length; ++i) {
+  for (uint16_t i = 0; i < buffer_length; ++i) {
     send(buffer[i]);
   }
-  goto_y_x(0, 0);
+  // goto_y_x(0, 0);
 }
 
 void NokiaGraphDisplay::put_pixel(uint8_t color) {
   data();
   uint8_t bit = y % 8;
-  uint16_t pos = (y / 8) * 48 + x;
+  uint16_t pos = (y / 8) * 84 + x;
   if (color == 0) {
     buffer[pos] &= ~(1 << bit);
   } else {
@@ -151,16 +151,25 @@ void NokiaGraphDisplay::put_pixel(uint8_t color) {
   send(buffer[pos]);
 
   ++x;
-  bool goto_needed = false;
   if (x > 84) {
     x = 0;
     ++y;
-    goto_needed = true;
+    if (y > 48) {
+      scroll();
+      goto_y_x(47, 0);
+    } else {
+      goto_y_x(y, x);
+    }
   }
-  if (y > 48) {
-    y = 0;
+}
+
+void NokiaGraphDisplay::scroll() {
+  for (uint16_t i = 0; i < buffer_length; ++i) {
+    buffer[i] >>= 1;
+    // buffer[i] &=
+    if (i < 84 * 5) { // last bank
+      buffer[i] |= (buffer[i+84]&1) << 7;
+    }
   }
-  if (goto_needed) {
-    goto_y_x(y, x);
-  }
+  redraw();
 }
