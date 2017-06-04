@@ -30,15 +30,8 @@ extern const uint8_t FONT[] PROGMEM;
 #define PCD8544_SETBIAS 0x10
 #define PCD8544_SETVOP 0x80
 
-class NokiaTextDisplay {
+class NokiaDisplayBase {
 public:
-  NokiaTextDisplay() : x(0), y(0), scroll(true) {
-    cursor_delay = 0;
-    cursor_timer = 0;
-    cursor_visible = false;
-    cursor_enabled = false;
-  }
-
   void start() {
     N_SCK_set_dir(PORT_DIR_OUT);
   	N_MOSI_set_dir(PORT_DIR_OUT);
@@ -58,8 +51,30 @@ public:
   }
 
   void send(uint8_t b) {
+    _send_no_wait(b);
+    _wait();
+  }
+
+  void init(uint8_t bias, uint8_t contrast, bool vertical = false);
+
+protected:
+  void _send_no_wait(uint8_t b) {
     SPDR = b;
+  }
+
+  void _wait() {
     while(!(SPSR & (1<<SPIF)));
+  }
+
+};
+
+class NokiaTextDisplay : public NokiaDisplayBase {
+public:
+  NokiaTextDisplay() : x(0), y(0), scroll(true) {
+    cursor_delay = 0;
+    cursor_timer = 0;
+    cursor_visible = false;
+    cursor_enabled = false;
   }
 
   void clear() {
@@ -116,7 +131,6 @@ public:
     }
   }
 
-  void init(uint8_t bias, uint8_t contrast);
   void print(char c);
   void print(const char *s);
   void redraw();
@@ -203,32 +217,9 @@ private:
 
 };
 
-class NokiaOscDisplay {
+class NokiaOscDisplay : public NokiaDisplayBase {
 public:
   NokiaOscDisplay() : x(0) {}
-
-  void start() {
-    N_SCK_set_dir(PORT_DIR_OUT);
-  	N_MOSI_set_dir(PORT_DIR_OUT);
-  	N_SCE_set_level(false);
-  }
-
-  void stop() {
-    N_SCE_set_level(true);
-  }
-
-  void control() {
-    N_D_C_set_level(false);
-  }
-
-  void data() {
-    N_D_C_set_level(true);
-  }
-
-  void send(uint8_t b) {
-    SPDR = b;
-    while(!(SPSR & (1<<SPIF)));
-  }
 
   void clear() {
     goto_x(0);
@@ -250,7 +241,6 @@ public:
     x = _x;
   }
 
-  void init(uint8_t bias, uint8_t contrast);
   void draw_bar(uint8_t height);
 
 private:
@@ -261,32 +251,9 @@ private:
 
 };
 
-class NokiaGraphDisplay {
+class NokiaGraphDisplay : public NokiaDisplayBase {
 public:
   NokiaGraphDisplay() : x(0), y(0) {}
-
-  void start() {
-    N_SCK_set_dir(PORT_DIR_OUT);
-  	N_MOSI_set_dir(PORT_DIR_OUT);
-  	N_SCE_set_level(false);
-  }
-
-  void stop() {
-    N_SCE_set_level(true);
-  }
-
-  void control() {
-    N_D_C_set_level(false);
-  }
-
-  void data() {
-    N_D_C_set_level(true);
-  }
-
-  void send(uint8_t b) {
-    _send_no_wait(b);
-    _wait();
-  }
 
   void clear() {
     memset(buffer, 0, buffer_length);
@@ -307,7 +274,6 @@ public:
     x = _x;
   }
 
-  void init(uint8_t bias, uint8_t contrast);
   void redraw();
   void put_pixel(uint8_t color);
   void scroll();
@@ -319,14 +285,6 @@ private:
   // current buffer
   static const size_t buffer_length = 84*6;
   uint8_t buffer[buffer_length];
-
-  void _send_no_wait(uint8_t b) {
-    SPDR = b;
-  }
-
-  void _wait() {
-    while(!(SPSR & (1<<SPIF)));
-  }
 
 };
 
