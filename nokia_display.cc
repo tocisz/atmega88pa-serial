@@ -74,6 +74,7 @@ void NokiaTextDisplay::redraw_char(
   _goto_y_x(old_y, old_x);
 }
 
+
 void NokiaOscDisplay::init(uint8_t bias, uint8_t contrast) {
   start();
   // RST is set LOW in system_init()
@@ -105,5 +106,61 @@ void NokiaOscDisplay::draw_bar(uint8_t height) {
       send(0xff << height);
       height = 0;
     }
+  }
+}
+
+
+void NokiaGraphDisplay::init(uint8_t bias, uint8_t contrast) {
+  start();
+	// RST is set LOW in system_init()
+	// N_RST_set_level(false);
+	// _delay_ms(100);
+	N_RST_set_level(true);
+	control();
+	send(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
+	send(PCD8544_SETBIAS | bias);
+	send(PCD8544_FUNCTIONSET);
+
+	send(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
+	if (contrast > 0x7f) contrast = 0x7f;
+	send(PCD8544_SETVOP | contrast);
+	send(PCD8544_FUNCTIONSET);
+
+	send(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
+	clear();
+}
+
+void NokiaGraphDisplay::redraw() {
+  goto_y_x(0, 0);
+  data();
+  for (uint8_t i = 0; i < buffer_length; ++i) {
+    send(buffer[i]);
+  }
+  goto_y_x(0, 0);
+}
+
+void NokiaGraphDisplay::put_pixel(uint8_t color) {
+  data();
+  uint8_t bit = y % 8;
+  uint16_t pos = (y / 8) * 48 + x;
+  if (color == 0) {
+    buffer[pos] &= ~(1 << bit);
+  } else {
+    buffer[pos] |= 1 << bit;
+  }
+  send(buffer[pos]);
+
+  ++x;
+  bool goto_needed = false;
+  if (x > 84) {
+    x = 0;
+    ++y;
+    goto_needed = true;
+  }
+  if (y > 48) {
+    y = 0;
+  }
+  if (goto_needed) {
+    goto_y_x(y, x);
   }
 }
