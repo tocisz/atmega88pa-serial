@@ -2,7 +2,7 @@
 
 #include "apple_font.h"
 
-void NokiaDisplayBase::init(uint8_t bias, uint8_t contrast, bool vertical) {
+void NokiaDisplayBase::_init(uint8_t bias, uint8_t contrast, bool vertical) {
   start();
 	// RST is set LOW in system_init()
 	// N_RST_set_level(false);
