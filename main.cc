@@ -23,9 +23,24 @@ static inline void animate_glow(void) {
 #include "nokia_display.h"
 
 NokiaGraphDisplay display;
+NokiaOscDisplay displayOsc;
+
+enum OperatingFunction {
+	BARS = 0,
+	SCROLL = 1,
+	OFF = 2
+};
+
+OperatingFunction next_function(OperatingFunction function) {
+	return (OperatingFunction)((function+1) % 3);
+}
+
+OperatingFunction function = OFF;
+
+void draw_bars(ADCBufferT::ByteBufferT &captured, uint16_t avg);
+void draw_scroll(ADCBufferT::ByteBufferT &captured, uint16_t avg);
 
 void read_adc(void) {
-	// print_param("ADC ", read_adcv());
 	ADCBufferT::ByteBufferT &captured = adc_values.capture();
 
 	uint16_t avg = 0;
@@ -36,24 +51,41 @@ void read_adc(void) {
 	}
 	avg = avg / cnt;
 	captured.read_byte(); // force next read cycle
-	// puts("ADC");
-	// uint8_t i = 0;
+
+	switch (function) {
+		case BARS:
+			draw_bars(captured, avg);
+			break;
+		case SCROLL:
+			draw_scroll(captured, avg);
+			break;
+		case OFF:
+			;
+	}
+}
+
+void draw_bars(ADCBufferT::ByteBufferT &captured, uint16_t avg) {
+	while(!captured.is_empty()) {
+		uint16_t v = captured.read_short();
+		int16_t vs = ((int16_t)v+24-avg);
+		uint8_t level;
+		if (vs > 48) {
+			level = 48;
+		} else if (vs < 0) {
+			level = 0;
+		} else {
+			level = (uint8_t) vs;
+		}
+		displayOsc.draw_bar(level);
+	}
+	displayOsc.goto_x(0); // without it last byte is not visible
+}
+
+void draw_scroll(ADCBufferT::ByteBufferT &captured, uint16_t avg) {
 	while(!captured.is_empty()) {
 		uint16_t v = captured.read_short();
 		display.put_pixel(v > avg);
-		// int16_t vs = ((int16_t)v+24-avg);
-		// uint8_t level;
-		// if (vs > 48) {
-		// 	level = 48;
-		// } else if (vs < 0) {
-		// 	level = 0;
-		// } else {
-		// 	level = (uint8_t) vs;
-		// }
-		// // print_pair(vs, v);
-		// display.draw_bar(level);
 	}
-	// display.goto_x(0); // without it last byte is not visible
 }
 
 void adc_start() {
@@ -65,6 +97,9 @@ void adc_stop() {
 	ADCSRA &= ~(1 << ADEN);
 	// ADCSRA &= ~(1 << ADATE);
 }
+
+const uint8_t bias = 4;
+const uint8_t contrast = 60;
 
 int main(void)
 {
@@ -82,8 +117,6 @@ int main(void)
 	display.set_cursor_delay(F_CPU/3906);
 */
 	display.init(4, 60);
-
-	bool on = false;
 	uint8_t draw_cnt = 0;
 
 	/* Replace with your application code */
@@ -96,11 +129,18 @@ int main(void)
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					HEART_set_level(button);
 					if (button) {
-						on = !on;
-						if (on) {
-							adc_start();
-						} else {
-							adc_stop();
+						function = next_function(function);
+						switch (function) {
+							case BARS:
+								adc_start();
+								displayOsc.init(4, 60);
+								break;
+							case SCROLL:
+							display.init(4, 60);
+								break;
+							case OFF:
+								adc_stop();
+								break;
 						}
 					}
 				}
@@ -112,7 +152,7 @@ int main(void)
 					wdt_reset();
 					animate_glow();
 					// display.animate_cursor();
-					if (on && !draw_cnt) {
+					if (function != OFF && !draw_cnt) {
 						draw_cnt = 16;
 						read_adc();
 					}
