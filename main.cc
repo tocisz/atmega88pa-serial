@@ -22,7 +22,7 @@ static inline void animate_glow(void) {
 #include "print.h"
 #include "nokia_display.h"
 
-NokiaGraphDisplay display;
+NokiaGraphDisplay displayGraph;
 NokiaOscDisplay displayOsc;
 
 enum OperatingFunction {
@@ -84,7 +84,7 @@ void draw_bars(ADCBufferT::ByteBufferT &captured, uint16_t avg) {
 void draw_scroll(ADCBufferT::ByteBufferT &captured, uint16_t avg) {
 	while(!captured.is_empty()) {
 		uint16_t v = captured.read_short();
-		display.put_pixel(v > avg);
+		displayGraph.put_pixel(v > avg);
 	}
 }
 
@@ -109,17 +109,8 @@ int main(void)
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cpu_irq_enable();
 
-/*
-	NokiaTextDisplay display;
-
-	display.init(4, 60);
-	display.print("Ready\n");
-	display.set_cursor_delay(F_CPU/3906);
-*/
-	display.init(4, 60);
 	uint8_t draw_cnt = 0;
 
-	/* Replace with your application code */
 	for(;;) {
 
 		ATOMIC_BLOCK(ATOMIC_FORCEON) {
@@ -133,10 +124,10 @@ int main(void)
 						switch (function) {
 							case BARS:
 								adc_start();
-								displayOsc.init(4, 60);
+								displayOsc.init(bias, contrast);
 								break;
 							case SCROLL:
-							display.init(4, 60);
+								displayGraph.init(bias, contrast);
 								break;
 							case OFF:
 								adc_stop();
@@ -151,7 +142,6 @@ int main(void)
 				NONATOMIC_BLOCK(NONATOMIC_FORCEOFF) {
 					wdt_reset();
 					animate_glow();
-					// display.animate_cursor();
 					if (function != OFF && !draw_cnt) {
 						draw_cnt = 16;
 						read_adc();
