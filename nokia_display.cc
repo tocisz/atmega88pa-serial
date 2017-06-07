@@ -107,18 +107,21 @@ void NokiaGraphDisplay::put_pixel(uint8_t color) {
   } else {
     buffer[pos] |= 1 << bit;
   }
-  send(buffer[pos]);
+  _send_no_wait(buffer[pos]); // postpone wait
 
   ++x;
   if (x > 84) {
     x = 0;
     ++y;
+    _wait();
     if (y > 48) {
       scroll();
       goto_y_x(47, 0);
     } else {
       goto_y_x(y, x);
     }
+  } else {
+    _wait();
   }
 }
 
