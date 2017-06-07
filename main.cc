@@ -84,7 +84,7 @@ void draw_bars(ADCBufferT::ByteBufferT &captured, uint16_t avg) {
 void draw_scroll(ADCBufferT::ByteBufferT &captured, uint16_t avg) {
 	while(!captured.is_empty()) {
 		uint16_t v = captured.read_short();
-		displayGraph.put_pixel(v > avg);
+		displayGraph.put_pixel(v > avg+2);
 	}
 }
 
