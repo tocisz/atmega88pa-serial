@@ -110,11 +110,11 @@ void NokiaGraphDisplay::put_pixel(uint8_t color) {
   _send_no_wait(buffer[pos]); // postpone wait
 
   ++x;
-  if (x > 84) {
+  if (x >= 84) {
     x = 0;
     ++y;
     _wait();
-    if (y > 48) {
+    if (y >= 48) {
       scroll();
       goto_y_x(47, 0);
     } else {
