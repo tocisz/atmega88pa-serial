@@ -104,6 +104,7 @@ int main(void)
 	display.init(4, 60);
 
 	Automaton30 automaton;
+	automaton.draw_generation(display);
 
 	/* Replace with your application code */
 	for(;;) {
