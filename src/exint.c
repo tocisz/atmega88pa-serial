@@ -46,8 +46,10 @@ int8_t EXTERNAL_IRQ_0_init()
 {
 
 	PCICR = (1 << PCIE1); // Enable pin change interrupt 1
-
 	PCMSK1 = (1 << PCINT13); // Pin change enable mask 13
+
+	PCICR = (1 << PCIE0); // Enable pin change interrupt 0
+	PCMSK0 = (1 << PCINT0); // Pin change enable mask 0
 
 	return 0;
 }

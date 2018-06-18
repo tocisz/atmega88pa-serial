@@ -18,7 +18,7 @@
  *
  * \param[in] pull_mode Pin pull mode
  */
-static inline void HEART_set_pull_mode(const enum port_pull_mode pull_mode)
+static inline void PB0_set_pull_mode(const enum port_pull_mode pull_mode)
 {
 	PORTB_set_pin_pull_mode(PORTB0, pull_mode);
 }
@@ -34,7 +34,7 @@ static inline void HEART_set_pull_mode(const enum port_pull_mode pull_mode)
  *                      PORT_DIR_OFF = Disables the pin
  *                      (low power state)
  */
-static inline void HEART_set_dir(const enum port_dir dir)
+static inline void PB0_set_dir(const enum port_dir dir)
 {
 	PORTB_set_pin_dir(PORTB0, dir);
 }
@@ -47,7 +47,7 @@ static inline void HEART_set_dir(const enum port_dir dir)
  * \param[in] level true  = Pin level set to "high" state
  *                  false = Pin level set to "low" state
  */
-static inline void HEART_set_level(const bool level)
+static inline void PB0_set_level(const bool level)
 {
 	PORTB_set_pin_level(PORTB0, level);
 }
@@ -57,7 +57,7 @@ static inline void HEART_set_level(const bool level)
  *
  * Toggle the pin level
  */
-static inline void HEART_toggle_level()
+static inline void PB0_toggle_level()
 {
 	PORTB_toggle_pin_level(PORTB0);
 }
@@ -67,7 +67,7 @@ static inline void HEART_toggle_level()
  *
  * Reads the level on a pin
  */
-static inline bool HEART_get_level()
+static inline bool PB0_get_level()
 {
 	return PORTB_get_pin_level(PORTB0);
 }

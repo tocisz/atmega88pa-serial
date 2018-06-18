@@ -16,6 +16,8 @@
 #include <port.h>
 #include <atmel_start_pins.h>
 
+#include <tc16.h>
+
 #include <sysctrl.h>
 #include <wdt.h>
 #include <exint.h>

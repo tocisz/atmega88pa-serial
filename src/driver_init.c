@@ -47,21 +47,25 @@ void tc8_2_init(void)
 	TIMER_2_init();
 }
 
+void TIMER_1_initialization(void)
+{
+
+	// Set pin direction to input
+	PB0_set_dir(PORT_DIR_IN);
+
+	PB0_set_pull_mode(
+	    // <y> Pull configuration
+	    // <id> pad_pull_config
+	    // <PORT_PULL_OFF"> Off
+	    // <PORT_PULL_UP"> Pull-up
+	    PORT_PULL_OFF);
+
+	TIMER_1_init();
+}
+
 void system_init()
 {
 	mcu_init();
-
-	// PORT on PB0
-
-	// Set pin direction to output
-	HEART_set_dir(PORT_DIR_OUT);
-
-	HEART_set_level(
-	    // <y> Initial level
-	    // <id> pad_initial_level
-	    // <false"> Low
-	    // <true"> High
-	    false);
 
 	sysctrl_init();
 
@@ -72,6 +76,8 @@ void system_init()
 	tc8_0_init();
 
 	tc8_2_init();
+
+	TIMER_1_initialization();
 
 	USART_init();
 }

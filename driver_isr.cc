@@ -28,7 +28,6 @@ static inline void handle_button_state_change(void) {
 ISR(USART_RX_vect)
 {
 	in_buffer.write_byte(USART_getc());
-	HEART_toggle_level();
 }
 
 ISR(USART_UDRE_vect)
@@ -65,4 +64,30 @@ ISR(PCINT1_vect)
 		// 1 can give arbitrary small delay (we don't reset timer)
 		button_block = 2;
 	#endif
+}
+
+volatile uint16_t count;
+volatile uint8_t ci = 0;
+volatile uint16_t capt[100];
+
+ISR(TIMER1_CAPT_vect)
+{
+	if (ci < 100) {
+		capt[ci++] = ICR1;
+	}
+
+	++count;
+}
+
+ISR(PCINT0_vect)
+{
+	TCNT1 = 0;
+}
+
+volatile uint32_t unix_time = 0;
+
+ISR(TIMER2_OVF_vect)
+{
+	++unix_time;
+	Events.new_1s_cycle = true;
 }
