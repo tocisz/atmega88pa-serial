@@ -3,7 +3,7 @@
 
 #include <atmel_start.h>
 
-#define BUFLEN 16
+#define BUFLEN 80
 
 #include "byte_buffer.h"
 

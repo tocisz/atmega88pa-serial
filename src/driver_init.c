@@ -58,7 +58,7 @@ void TIMER_1_initialization(void)
 	    // <id> pad_pull_config
 	    // <PORT_PULL_OFF"> Off
 	    // <PORT_PULL_UP"> Pull-up
-	    PORT_PULL_OFF);
+	    PORT_PULL_UP);
 
 	TIMER_1_init();
 }
