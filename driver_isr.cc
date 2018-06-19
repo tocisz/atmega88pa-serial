@@ -68,7 +68,7 @@ ISR(PCINT1_vect)
 
 volatile uint16_t count;
 volatile uint8_t ci = 0;
-volatile uint16_t capt[100];
+volatile uint16_t capt[capt_size];
 
 ISR(TIMER1_CAPT_vect)
 {

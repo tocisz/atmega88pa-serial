@@ -8,12 +8,7 @@
 #include "events.h"
 #include "usart_util.h"
 #include "print.h"
-
-uint16_t start_time, end_time;
-
-const uint16_t LOW_COUNT = 621;
-const uint16_t COUNT_STEP = 587;
-#define HIST_SIZE 9
+#include "decoder.h"
 
 int main(void)
 {
@@ -25,38 +20,16 @@ int main(void)
 
 	// eni();
 
-	uint8_t hist[HIST_SIZE];
+	decoder decoder;
 
 	/* Replace with your application code */
 	for(;;) {
 
-		if (ci == 100) {
-			uint32_t sum = 0;
-			memset(hist, 0, HIST_SIZE);
-			for (uint8_t i = 0; i < 100; ++i) {
-				uint16_t val = capt[i];
-				sum += val;
-				if (val >= LOW_COUNT) {
-					uint16_t idx = (val - LOW_COUNT) / COUNT_STEP;
-					if (idx < HIST_SIZE) {
-						++hist[idx];
-					}
-				}
-			}
-			sum /= 100;
-			while (!out_buffer.is_empty());
-			printf("avg %u\r\n", (uint16_t)sum);
-
-			while (!out_buffer.is_empty());
-			// puts("his\t");
-			for (uint16_t i = 0; i < HIST_SIZE; ++i) {
-				while (!out_buffer.is_empty());
-				printf("%u\t", hist[i]);
-			}
-			puts("");
-
-		ci = 0;
-	}
+		if (ci == capt_size) {
+			decoder.capture_frame();
+			ci = 0; // resume PWM capture
+			decoder.decode_frame();
+		}
 
 		// ATOMIC_BLOCK(ATOMIC_FORCEON) {
 		// 	if (Events.new_1s_cycle) {
@@ -66,6 +39,10 @@ int main(void)
 		//     }
 		// 	}
 		// }
+
+		while(decoder.has_char()) {
+			putchar(decoder.get_char());
+		}
 
 		while (!in_buffer.is_empty()) {
 			putchar(getchar());

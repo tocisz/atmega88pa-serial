@@ -45,6 +45,7 @@ events.o \
 usart_util.o \
 usart_util0.o \
 print.o \
+decoder.o \
 main.o
 
 OBJS_AS_ARGS +=  \
@@ -62,6 +63,7 @@ OBJS_AS_ARGS +=  \
 "usart_util.o" \
 "usart_util0.o" \
 "print.o" \
+"decoder.o" \
 "main.o"
 
 # List the dependency files
