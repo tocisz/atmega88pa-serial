@@ -23,10 +23,10 @@ private:
 
   uint8_t hist[HIST_SIZE];
 
-  bool _has_char :1;
-  uint8_t chunk :2;
-  uint8_t repetitions :2;
-  uint8_t empty_frames :4;
+  bool _has_char;
+  uint8_t chunk;
+  uint8_t repetitions;
+  uint8_t empty_frames;
 
   uint8_t last_nibble;
   uint8_t n0;
