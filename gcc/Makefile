@@ -3,6 +3,9 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
+DEBUG =
+OPT = -Os
+
 ifdef SystemRoot
 	SHELL = cmd.exe
 	MK_DIR = mkdir
@@ -26,7 +29,6 @@ endif
 
 # List the subdirectories for creating object files
 SUB_DIRS +=  \
- \
 src
 
 # List the object files
@@ -48,42 +50,8 @@ print.o \
 decoder.o \
 main.o
 
-OBJS_AS_ARGS +=  \
-"src/driver_init.o" \
-"driver_isr.o" \
-"src/exint.o" \
-"src/tc8.o" \
-"src/tc16.o" \
-"src/usart.o" \
-"src/wdt.o" \
-"atmel_start.o" \
-"src/ccp.o" \
-"src/protected_io.o" \
-"events.o" \
-"usart_util.o" \
-"usart_util0.o" \
-"print.o" \
-"decoder.o" \
-"main.o"
-
 # List the dependency files
 DEPS := $(OBJS:%.o=%.d)
-
-DEPS_AS_ARGS +=  \
-"src/driver_init.d" \
-"driver_isr.d" \
-"src/exint.d" \
-"src/tc8.d" \
-"src/usart.d" \
-"src/wdt.d" \
-"atmel_start.d" \
-"src/ccp.d" \
-"src/protected_io.d" \
-"events.d" \
-"usart_util.d" \
-"usart_util0.d" \
-"print.d" \
-"main.d"
 
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 OUTPUT_FILE_NAME :=AtmelStart
@@ -105,7 +73,7 @@ all: $(SUB_DIRS) $(OUTPUT_FILE_PATH)
 $(OUTPUT_FILE_PATH): $(OBJS)
 	@echo Building target: $@
 	@echo Invoking: AVR/GNU Linker
-	$(QUOTE)avr-gcc$(QUOTE) -o $(OUTPUT_FILE_NAME).elf $(OBJS_AS_ARGS) -Wl,--start-group -lm -Wl,--end-group \
+	$(QUOTE)avr-gcc$(QUOTE) -o $(OUTPUT_FILE_NAME).elf $(OBJS) -Wl,--start-group -lm -Wl,--end-group \
 -Wl,-Map="$(OUTPUT_FILE_NAME).map" -Wl,--gc-sections \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
 -L"../gcc/dev/atmega88/avr4"  \
@@ -127,7 +95,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 %.o: %.c
 	@echo Building file: $<
 	@echo AVR/GNU C Compiler
-	$(QUOTE)avr-gcc$(QUOTE) -x c -DF_CPU=8000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)avr-gcc$(QUOTE) -x c -DF_CPU=8000000 $(DEBUG) $(OPT) -ffunction-sections -g3 -Wall -c -std=gnu99 \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
     -D__mega88__ \
 -I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \
@@ -138,7 +106,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 %.o: %.cc
 	@echo Building file: $<
 	@echo AVR/GNU C++ Compiler
-	$(QUOTE)avr-g++$(QUOTE) -x c++ -DF_CPU=8000000 -DDEBUG -Os -ffunction-sections -g3 -Wall -c -std=c++11 \
+	$(QUOTE)avr-g++$(QUOTE) -x c++ -DF_CPU=8000000 $(DEBUG) $(OPT) -ffunction-sections -g3 -Wall -c -std=c++11 \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
     -D__mega88__ \
 -I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \
@@ -149,7 +117,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 %.o: %.s
 	@echo Building file: $<
 	@echo AVR/GNU Assembler
-	$(QUOTE)avr-gcc$(QUOTE) -x assembler-with-cpp -DF_CPU=8000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)avr-gcc$(QUOTE) -x assembler-with-cpp -DF_CPU=8000000 $(DEBUG) $(OPT) -ffunction-sections -g3 -Wall -c -std=gnu99 \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
     -D__mega88__ \
 -I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \
@@ -160,7 +128,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 %.o: %.S
 	@echo Building file: $<
 	@echo AVR/GNU Preprocessing Assembler
-	$(QUOTE)avr-gcc$(QUOTE) -x assembler-with-cpp -DF_CPU=8000000 -DDEBUG -O1 -ffunction-sections -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)avr-gcc$(QUOTE) -x assembler-with-cpp -DF_CPU=8000000 $(DEBUG) $(OPT) -ffunction-sections -g3 -Wall -c -std=gnu99 \
 -mmcu=atmega88 -B "$(MAKEFILE_DIR)../gcc/dev/atmega88" \
     -D__mega88__ \
 -I"../include" -I"../utils" -I"../utils/assembler" -I"../" -I"../include"  \
@@ -179,9 +147,9 @@ $(SUB_DIRS):
 	$(MK_DIR) "$@"
 
 clean:
-	rm -f $(OBJS_AS_ARGS)
+	rm -f $(OBJS)
 	rm -f $(OUTPUT_FILE_PATH)
-	rm -f $(DEPS_AS_ARGS)
+	rm -f $(DEPS)
 	rm -f $(OUTPUT_FILE_NAME).a $(OUTPUT_FILE_NAME).hex $(OUTPUT_FILE_NAME).bin \
         $(OUTPUT_FILE_NAME).lss $(OUTPUT_FILE_NAME).eep $(OUTPUT_FILE_NAME).map \
         $(OUTPUT_FILE_NAME).srec
