@@ -29,6 +29,7 @@ int main(void)
 			decoder.capture_frame();
 			ci = 0; // resume PWM capture
 			decoder.decode_frame();
+			//printf("%hu\n", decoder.get_average());
 		}
 
 		// ATOMIC_BLOCK(ATOMIC_FORCEON) {

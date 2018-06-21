@@ -4,19 +4,19 @@
 #include "decoder.h"
 #include "events.h"
 
-const uint16_t LOW_COUNT = 621;
-const uint16_t COUNT_STEP = 587;
+const uint16_t LOW_COUNT = 979;
+const uint16_t COUNT_STEP = 909;
 
 decoder::decoder() {
   reset();
 }
 
 void decoder::reset() {
-  last_nibble = 9; // out of range
-  n0 = 9; // out of range
-  n0_corrected = 9; // out of range
+  last_nibble = HIST_SIZE; // out of range
+  n0 = HIST_SIZE; // out of range
+  c0 = 0;
 
-  odd_parity = false;
+  chunk = 0;
   repetitions = 0;
   empty_frames = decoder::max_empty_frames; // so it won't reset again
   #if DEBUG
@@ -66,7 +66,7 @@ void decoder::decode_frame() {
           ++repetitions;
         }
         if (repetitions == max_repetitions) {
-          got_nibble(i);
+          got_chunk(i);
         }
       } else {
         repetitions = 0;
@@ -89,9 +89,18 @@ void decoder::decode_frame() {
   }
 }
 
-void decoder::got_nibble(uint8_t n) {
+uint16_t decoder::get_average() {
+  uint32_t sum = 0;
+  for (uint8_t i = 0; i < capt_size; ++i) {
+    sum += capt[i];
+  }
+  return sum / capt_size;
+}
+
+void decoder::got_chunk(uint8_t n) {
   // correct forbidden repetitions rule
   uint8_t n_corrected = (n > n0) ? (n-1) : n;
+  n0 = n;
 
   #if DEBUG
   putchar('[');
@@ -99,15 +108,17 @@ void decoder::got_nibble(uint8_t n) {
   putchar(']');
   #endif
 
-  if (odd_parity) { // we have a char
+  c0 = (c0 << 2) | n_corrected;
+
+  if (chunk == chunks_limit) { // we have a char
     _has_char = true;
-    c = 32 + ( (n0_corrected<<3) | n_corrected );
+    c = 32 + c0;
+    chunk = 0;
+    c0 = 0;
+  } else {
+    ++chunk;
   }
 
-  n0 = n;
-  n0_corrected = n_corrected;
-
-  odd_parity = !odd_parity;
 }
 
 bool decoder::has_char() {
