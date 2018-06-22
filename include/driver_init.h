@@ -22,6 +22,7 @@
 #include <wdt.h>
 #include <exint.h>
 #include <tc8.h>
+#include <pwm_basic.h>
 #include <usart.h>
 
 #ifdef __cplusplus

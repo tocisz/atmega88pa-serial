@@ -45,27 +45,6 @@
 #include <utils.h>
 
 /**
- * \brief Initialize TIMER_0 interface
- */
-int8_t TIMER_0_init()
-{
-	/* Enable TC0 */
-	PRR &= ~(1 << PRTIM0);
-	TCCR0A = (0 << COM0A1) | (0 << COM0A0) | // Normal port operation, OCA disconnected
-	         (0 << COM0B1) | (0 << COM0B0) | // Normal port operation, OCA disconnected
-	         (0 << WGM01) | (0 << WGM00);    // Mode 0 Normal
-
-	TCCR0B = (0 << WGM02) |                           // Mode 0 Normal
-	         (0 << CS02) | (1 << CS01) | (0 << CS00); // IO clock divided by 8
-
-	TIMSK0 = (0 << OCIE0B) | // Disable output compare match B interrupt
-	         (0 << OCIE0A) | // Disable output compare match A interrupt
-	         (1 << TOIE0);   // Enable overflow interrupt
-
-	return 0;
-}
-
-/**
  * \brief Initialize TIMER_2 interface
  */
 int8_t TIMER_2_init()

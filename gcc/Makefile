@@ -37,6 +37,7 @@ src/driver_init.o \
 driver_isr.o \
 src/exint.o \
 src/tc8.o \
+src/pwm_basic.o \
 src/tc16.o \
 src/usart.o \
 src/wdt.o \

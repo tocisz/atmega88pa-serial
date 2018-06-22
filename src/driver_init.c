@@ -25,10 +25,20 @@ void exint_0_init(void)
 	EXTERNAL_IRQ_0_init();
 }
 
-void tc8_0_init(void)
+void PWM_0_initialization(void)
 {
 
-	TIMER_0_init();
+        // Set pin direction to output
+        PD5_set_dir(PORT_DIR_OUT);
+
+        PD5_set_level(
+            // <y> Initial level
+            // <id> pad_initial_level
+            // <false"> Low
+            // <true"> High
+            false);
+
+        PWM_0_init();
 }
 
 void tc8_2_init(void)
@@ -73,7 +83,7 @@ void system_init()
 
 	exint_0_init();
 
-	tc8_0_init();
+	PWM_0_initialization();
 
 	tc8_2_init();
 

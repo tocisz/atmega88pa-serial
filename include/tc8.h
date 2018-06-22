@@ -60,33 +60,6 @@ extern "C" {
 #endif
 
 /**
- * \brief Initialize TIMER_0 interface
- *
- * \return Initialization status.
- */
-int8_t TIMER_0_init();
-
-/**
- * \brief Set compare channel A value
- *
- * \param[in] value The new compare value to set
- */
-static inline void TIMER_0_set_comp_a(uint8_t value)
-{
-	OCR0A = value;
-}
-
-/**
- * \brief Set compare channel B value
- *
- * \param[in] value The new compare value to set
- */
-static inline void TIMER_0_set_comp_b(uint8_t value)
-{
-	OCR0B = value;
-}
-
-/**
  * \brief Initialize TIMER_2 interface
  *
  * \return Initialization status.
